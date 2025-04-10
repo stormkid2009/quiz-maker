@@ -1,19 +1,14 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { z, ZodError } from "zod";
+import { QuestionSchema, type Question } from "@/shared/schemas/question";
 import { MCQQuestionSchema } from "@/shared/schemas/mcq";
 import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
 import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
-import { QuizSchema , type Quiz } from "@/shared/schemas/quiz";
+import { QuizSchema, type Quiz } from "@/shared/schemas/quiz";
 import { testDatabaseConnection } from "@/utils/database";
-import { type Question } from "@/shared/schemas/question"; // Import Question type
 import { getOneRandomDoc } from "@/utils/api-helper";
 
-
-
-
-// Standardize error responses
 function createErrorResponse(message: string, details?: any, status: number = 500) {
   return NextResponse.json(
     { error: message, ...(details && { details }) },
@@ -22,7 +17,7 @@ function createErrorResponse(message: string, details?: any, status: number = 50
 }
 
 export async function GET() {
-  console.log("👋 Quiz API called");
+  console.log("👋 Quiz API is called !");
 
   try {
     const dbConnected = await testDatabaseConnection();
@@ -33,42 +28,78 @@ export async function GET() {
 
     const questions: Question[] = [];
 
+    // Fetch Grammaire (MCQ)
     try {
       const grammaire = await getOneRandomDoc(
         prisma.grammaire,
         MCQQuestionSchema
       );
-      if (grammaire) questions.push(grammaire);
+      if (grammaire) {
+        // Ensure type is literal value
+        const fixedGrammaire = {
+          ...grammaire,
+          type: "MCQ" as const,
+        };
+        questions.push(fixedGrammaire);
+      }
     } catch (e) {
       console.error("Failed to fetch grammaire:", e);
     }
 
+    // Fetch Composition (Open-Ended)
     try {
       const composition = await getOneRandomDoc(
         prisma.composition,
         OpenEndedQuestionSchema
       );
-      if (composition) questions.push(composition);
+      if (composition) {
+        // Ensure type is literal value
+        const fixedComposition = {
+          ...composition,
+          type: "Open-Ended" as const,
+        };
+        questions.push(fixedComposition);
+      }
     } catch (e) {
       console.error("Failed to fetch composition:", e);
     }
 
+    // Fetch Passage (Reading Comprehension)
     try {
       const passage = await getOneRandomDoc(
         prisma.passage,
         ReadingComprehensionQuestionSchema
       );
-      if (passage) questions.push(passage);
+      if (passage) {
+        // Ensure type is literal value
+        const fixedPassage = {
+          ...passage,
+          type: "RC" as const,
+          relatedQuestions: passage.relatedQuestions.map((question) => ({
+            ...question,
+            type: "MCQ" as const, // Ensure related questions are of type MCQ
+          })),
+        };
+        questions.push(fixedPassage);
+      }
     } catch (e) {
       console.error("Failed to fetch passage:", e);
     }
 
+    // Fetch Situation (Multi-MCQ)
     try {
       const situation = await getOneRandomDoc(
         prisma.situation,
         MultiMCQQuestionSchema
       );
-      if (situation) questions.push(situation);
+      if (situation) {
+        // Ensure type is literal value
+        const fixedSituation = {
+          ...situation,
+          type: "Multi-MCQ" as const,
+        };
+        questions.push(fixedSituation);
+      }
     } catch (e) {
       console.error("Failed to fetch situation:", e);
     }
@@ -87,12 +118,8 @@ export async function GET() {
 
       return NextResponse.json(quiz);
     } catch (parseError) {
-      if (parseError instanceof ZodError) {
-        console.error("Quiz schema validation error:", parseError.errors);
-        return createErrorResponse("Failed to create a valid quiz", parseError.errors);
-      }
-      console.error("Unexpected error:", parseError);
-      return createErrorResponse("Unexpected error during quiz validation");
+      console.error("Quiz schema validation error:", parseError);
+      return createErrorResponse("Failed to create a valid quiz", parseError.errors);
     }
   } catch (err: unknown) {
     console.error("Unhandled error in quiz API:", err);

@@ -19,12 +19,12 @@ export const RelatedQuestionSchema = z.object({
 
 // Define schema to match your Prisma Passage model
 export const ReadingComprehensionQuestionSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   passage: z.string(),
   type: z.literal(QuestionTypes.RC),
   relatedQuestions: z.array(RelatedQuestionSchema),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional()
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 

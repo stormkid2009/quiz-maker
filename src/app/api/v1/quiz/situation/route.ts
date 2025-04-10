@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
 import { getOneRandomDoc } from "@/utils/api-helper"; // Shared utility (see step 4)
+import { testDatabaseConnection } from "@/utils/database";
 
 export async function GET() {
+  
+ console.log("👋  API Multi_MCQ Question is  called");
   try {
+    const connnectedToDB = await testDatabaseConnection();
+    if(!connnectedToDB){
+      consoel.log(`Unable to connecto to DB !`);
+    }
     const question = await getOneRandomDoc(
       prisma.situation,
       MultiMCQQuestionSchema

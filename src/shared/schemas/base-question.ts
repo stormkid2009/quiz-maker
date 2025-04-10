@@ -19,11 +19,11 @@ export const QuestionTypes = {
 
 // Base question schema
 export const BaseQuestionSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   content: z.string(),
   type: QuestionTypesSchema,
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(), 
 });
 
 // Infer type for base question

@@ -3,9 +3,16 @@ import { ZodError } from "zod";
 import prisma from "@/lib/prisma";
 import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 import { getOneRandomDoc } from "@/utils/api-helper";
+import { testDatabaseConnection } from "@/utils/database";
 
 export async function GET() {
+
+console.log("👋  API Reading Comprehension question is  called");
   try {
+    const connectedToDB = await testDatabaseConnection();
+    if (!connectedToDB){
+      console.log(`Unable to connect to DB !`);
+    }
     let rawQuestion;
     try {
       rawQuestion = await getOneRandomDoc(
