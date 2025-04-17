@@ -1,8 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
+}
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+type PassagesRelatedQuestions {
+  id          String   @map("_id") @db.ObjectId
+  content     String
+  options     String[]
+  rightAnswer String[]
+  type        String
+}
+
+model compositions {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  answer    String
+  content   String
+  createdAt DateTime @db.Date
+  elements  String[]
+  type      String
+  updatedAt DateTime @db.Date
+
+  @@index([type], map: "type_1")
+}
+
+model grammaires {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  content     String
+  createdAt   DateTime @db.Date
+  options     String[]
+  rightAnswer String[]
+  type        String
+  updatedAt   DateTime @db.Date
+}
+
+model passages {
+  id               String                     @id @default(auto()) @map("_id") @db.ObjectId
+  v                Int                        @map("__v")
+  createdAt        DateTime                   @db.Date
+  passage          String
+  relatedQuestions PassagesRelatedQuestions[]
+  type             String
+  updatedAt        DateTime                   @db.Date
+}
+
+model situations {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  v            Int      @map("__v")
+  content      String
+  createdAt    DateTime @db.Date
+  options      String[]
+  rightAnswers String[]
+  type         String
+  updatedAt    DateTime @db.Date
+}
+
+model users {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  email     String   @unique(map: "email_1")
+  password  String
 }
