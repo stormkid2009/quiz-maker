@@ -8,63 +8,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-type PassagesRelatedQuestions {
-  id          String   @map("_id") @db.ObjectId
+type PassageRelatedQuestion {
   content     String
   options     String[]
   rightAnswer String[]
   type        String
 }
 
-model compositions {
+model Composition {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
   answer    String
   content   String
   createdAt DateTime @db.Date
   elements  String[]
   type      String
   updatedAt DateTime @db.Date
-
-  @@index([type], map: "type_1")
+  @@index([type])
+  @@map("compositions")
 }
 
-model grammaires {
+model Grammaire {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int      @map("__v")
   content     String
   createdAt   DateTime @db.Date
   options     String[]
   rightAnswer String[]
   type        String
   updatedAt   DateTime @db.Date
+  @@index([type])
+  @@map("grammaires")
 }
 
-model passages {
-  id               String                     @id @default(auto()) @map("_id") @db.ObjectId
-  v                Int                        @map("__v")
-  createdAt        DateTime                   @db.Date
+model Passage {
+  id               String                  @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime                @db.Date
   passage          String
-  relatedQuestions PassagesRelatedQuestions[]
+  relatedQuestions PassageRelatedQuestion[]
   type             String
-  updatedAt        DateTime                   @db.Date
+  updatedAt        DateTime                @db.Date
+  @@index([type])
+  @@map("passages")
 }
 
-model situations {
+model Situation {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  v            Int      @map("__v")
   content      String
   createdAt    DateTime @db.Date
   options      String[]
-  rightAnswers String[]
+  rightAnswer  String[] // Standardized to match grammaires
   type         String
   updatedAt    DateTime @db.Date
+  @@index([type])
+  @@map("situations")
 }
 
-model users {
+model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
   createdAt DateTime @db.Date
-  email     String   @unique(map: "email_1")
+  email     String   @unique
   password  String
+  updatedAt DateTime @db.Date // Added for consistency
+  @@map("users")
 }

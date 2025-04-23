@@ -1,15 +1,18 @@
 // src/lib/prisma.ts
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-declare global {
-  // allow global prisma in dev only
-  var prisma: PrismaClient | undefined
-}
+const prisma = new PrismaClient();
 
-const prisma = global.prisma ?? new PrismaClient()
+// Optional: Middleware for automatic createdAt/updatedAt
+prisma.$use(async (params, next) => {
+  if (params.action === 'create' || params.action === 'update') {
+    const now = new Date();
+    if (params.action === 'create') {
+      params.args.data.createdAt = now;
+    }
+    params.args.data.updatedAt = now;
+  }
+  return next(params);
+});
 
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma
-}
-
-export default prisma
+export default prisma;
