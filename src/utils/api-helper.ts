@@ -1,6 +1,5 @@
 //utils/api-helper.ts
 import { z } from "zod";
-import { NextResponse } from "next/server";
 
 // Define the Prisma model interface
 export type PrismaModel<T> = {
@@ -51,18 +50,3 @@ export async function getOneRandomDoc<T>(
   }
 }
 
-// Optional: Utility for creating error responses
-export function createErrorResponse(
-  message: string, 
-  details?: unknown, 
-  status: number = 500
-) {
-  return NextResponse.json(
-    {
-      success: false,
-      error: message,
-      ...(details && { details: JSON.parse(JSON.stringify(details)) })
-    },
-    { status }
-  );
-}

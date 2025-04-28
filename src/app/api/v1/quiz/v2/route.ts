@@ -5,52 +5,13 @@ import { MCQQuestionSchema } from "@/shared/schemas/mcq";
 import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
 import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
-import { QuizSchema } from "@/shared/schemas/quiz";
+import { QuizSchema , type Quiz } from "@/shared/schemas/quiz";
 import { testDatabaseConnection } from "@/utils/database";
-import { Question } from "@/types/questions"; // Import Question type
+import { type Question } from "@/shared/schemas/question"; // Import Question type
+import { getOneRandomDoc } from "@/utils/api-helper";
 
-// Infer quiz type
-type Quiz = z.infer<typeof QuizSchema>;
 
-// Define a generic Prisma model type
-type PrismaModel<T> = {
-  findMany: (args?: { take?: number; skip?: number }) => Promise<T[]>;
-  count: () => Promise<number>;
-};
 
-// Fetch one random document
-async function getOneRandomDoc<T>(
-  collection: PrismaModel<T>,
-  schema: z.ZodType<T>
-): Promise<T | null> {
-  try {
-    const count = await collection.count();
-    if (count === 0) {
-      console.warn(`Collection appears to be empty`);
-      return null;
-    }
-
-    const randomSkip = Math.floor(Math.random() * count);
-    const docs = await collection.findMany({
-      skip: randomSkip,
-      take: 1,
-    });
-
-    if (docs.length === 0) {
-      return null;
-    }
-
-    try {
-      return schema.parse(docs[0]);
-    } catch (parseError) {
-      console.error("Schema validation error:", parseError);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching document:", error);
-    return null;
-  }
-}
 
 // Standardize error responses
 function createErrorResponse(message: string, details?: any, status: number = 500) {
