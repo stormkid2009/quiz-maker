@@ -7,7 +7,7 @@ import {ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 
 // Create a union type of all questions using discriminated union
 
-export const GeneralQuestionSchema = z.discriminatedUnion("type",[
+export const QuestionSchema = z.discriminatedUnion("type",[
   MCQQuestionSchema,
   MultiMCQQuestionSchema,
   OpenEndedQuestionSchema,
@@ -15,5 +15,5 @@ export const GeneralQuestionSchema = z.discriminatedUnion("type",[
 ]);
 
 // infer type for general purpose question 
-export type GeneralQuestion = z.infer<typeof GeneralQuestionSchema>;
+export type Question = z.infer<typeof QuestionSchema>;
 

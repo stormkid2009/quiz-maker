@@ -3,12 +3,12 @@ import { MCQQuestionSchema } from "./mcq";
 import { MultiMCQQuestionSchema } from "./multi-mcq";
 import { ReadingComprehensionQuestionSchema } from "./rc";
 import { OpenEndedQuestionSchema } from "./open-ended";
-import {GeneralQuestionSchema , type GneralQuestion } from "./general-question";
+import { QuestionSchema , type Question } from "./question";
 
 
 // Basic quiz schema - array of questions
 export const BasicQuizSchema = z.object({
-  questions: z.array(GeneralQuestionSchema),
+  questions: z.array(QuestionSchema),
 });
 
 // Fixed structure quiz schema (if you need the original behavior)
