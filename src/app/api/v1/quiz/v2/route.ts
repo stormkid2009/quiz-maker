@@ -1,32 +1,18 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z, ZodError } from "zod";
-import { GrammaireQuestionSchema } from "@/shared/schemas/grammaire";
-import { CompositionQuestionSchema } from "@/shared/schemas/composition";
-import { PassageQuestionSchema } from "@/shared/schemas/passage";
-import { SituationQuestionSchema } from "@/shared/schemas/situation";
+import { MCQQuestionSchema } from "@/shared/schemas/mcq";
+import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
+import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
+import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
 import { QuizSchema } from "@/shared/schemas/quiz";
-import { testDatabaseConnection } from "@/utils/database"; // updated import
-
-// Infer question types from schemas
-type GrammaireQuestion = z.infer<typeof GrammaireQuestionSchema>;
-type CompositionQuestion = z.infer<typeof CompositionQuestionSchema>;
-type PassageQuestion = z.infer<typeof PassageQuestionSchema>;
-type SituationQuestion = z.infer<typeof SituationQuestionSchema>;
-type Question = GrammaireQuestion | CompositionQuestion | PassageQuestion | SituationQuestion;
+import { testDatabaseConnection } from "@/utils/database";
+import { Question } from "@/types/questions"; // Import Question type
 
 // Infer quiz type
 type Quiz = z.infer<typeof QuizSchema>;
 
-// Define Prisma model type for MongoDB  
-// ** why findMany as we need to fetch one random document?
-//because Prisma doesn't provide a native method to fetch a single random document. 
-// Instead, we use findMany with a skip and take parameter to achieve this.
-// This is a workaround to get a single random document from the collection.
-// The findMany method is used to retrieve documents from the database,
-// and we specify the number of documents to skip and take.
-// This allows us to effectively fetch a random document by skipping a random number of documents
-// and taking just one document.
+// Define a generic Prisma model type
 type PrismaModel<T> = {
   findMany: (args?: { take?: number; skip?: number }) => Promise<T[]>;
   count: () => Promise<number>;
@@ -43,17 +29,17 @@ async function getOneRandomDoc<T>(
       console.warn(`Collection appears to be empty`);
       return null;
     }
-    
+
     const randomSkip = Math.floor(Math.random() * count);
     const docs = await collection.findMany({
       skip: randomSkip,
       take: 1,
     });
-    
+
     if (docs.length === 0) {
       return null;
     }
-    
+
     try {
       return schema.parse(docs[0]);
     } catch (parseError) {
@@ -76,56 +62,68 @@ function createErrorResponse(message: string, details?: any, status: number = 50
 
 export async function GET() {
   console.log("👋 Quiz API called");
-  
+
   try {
     const dbConnected = await testDatabaseConnection();
-    
+
     if (!dbConnected) {
       return createErrorResponse("Unable to connect to database");
     }
-    
+
     const questions: Question[] = [];
-    
+
     try {
-      const grammaire = await getOneRandomDoc(prisma.grammaire, GrammaireQuestionSchema);
+      const grammaire = await getOneRandomDoc(
+        prisma.grammaire,
+        MCQQuestionSchema
+      );
       if (grammaire) questions.push(grammaire);
     } catch (e) {
       console.error("Failed to fetch grammaire:", e);
     }
+
     try {
-      const composition = await getOneRandomDoc(prisma.composition, CompositionQuestionSchema);
+      const composition = await getOneRandomDoc(
+        prisma.composition,
+        OpenEndedQuestionSchema
+      );
       if (composition) questions.push(composition);
     } catch (e) {
       console.error("Failed to fetch composition:", e);
     }
-    
-    /*
+
     try {
-      const passage = await getOneRandomDoc(prisma.passage, PassageQuestionSchema);
+      const passage = await getOneRandomDoc(
+        prisma.passage,
+        ReadingComprehensionQuestionSchema
+      );
       if (passage) questions.push(passage);
     } catch (e) {
       console.error("Failed to fetch passage:", e);
     }
-    
-    */
+
     try {
-      const situation = await getOneRandomDoc(prisma.situation, SituationQuestionSchema);
+      const situation = await getOneRandomDoc(
+        prisma.situation,
+        MultiMCQQuestionSchema
+      );
       if (situation) questions.push(situation);
     } catch (e) {
       console.error("Failed to fetch situation:", e);
     }
+
     if (questions.length === 0) {
       console.error("No valid questions were found in any collection");
       return createErrorResponse("No valid questions found", null, 404);
     }
-    
+
     console.log(`Creating quiz with ${questions.length} questions`);
-    
+
     try {
       const quiz: Quiz = QuizSchema.parse({
         questions: questions,
       });
-      
+
       return NextResponse.json(quiz);
     } catch (parseError) {
       if (parseError instanceof ZodError) {

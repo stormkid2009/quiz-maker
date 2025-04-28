@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { GrammaireQuestionSchema } from "@/shared/schemas/grammaire";
+import { MCQQuestionSchema } from "@/shared/schemas/mcq";
 import { getOneRandomDoc } from "@/utils/api-helper"; // Shared utility (see step 4)
 
 export async function GET() {
   try {
     const question = await getOneRandomDoc(
       prisma.grammaire,
-      GrammaireQuestionSchema
+      MCQQuestionSchema
     );
     
     if (!question) {

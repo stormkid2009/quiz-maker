@@ -10,43 +10,50 @@ export const QuestionTypes = {
 
 // Base type for all questions with common properties
 export interface BaseQuestion {
+
+    id?: string;
     content: string;
     type: QuestionType;
+    createdAt?: Date;
+    updatedAt?: Date;
   }
   
-  // Specialized interface for questions with options
-  export interface OptionsQuestion extends BaseQuestion {
-    options: string[];
-  }
-  
-  // More specific question types with strict typing
-  export interface GrammaireQuestion extends BaseQuestion {
+// MCQ Question type (Grammar questions)
+  export interface MCQQuestion extends BaseQuestion {
     type: typeof QuestionTypes.MCQ;
-    options: [string, string, string, string];
-    rightAnswer: [string];
+    options: string[]; //array of possible answers
+    rightAnswer: string[]// array of one correct answerf
   }
-  
-  export interface SituationQuestion extends BaseQuestion {
+ // Multi-select MCQ Question type (Situation Questions) 
+  export interface MultiMCQQuestion extends BaseQuestion {
     type: typeof QuestionTypes.MULTI_MCQ;
-    options: [string, string, string, string, string];
-    rightAnswer: [string, string];
+    options: string[]; // array of possible answers 
+    rightAnswer: string[]; // array with multiple correct answers
   }
-  
-  export interface CompositionQuestion extends BaseQuestion {
+ // Open-Ended Question type (Composition Questions) 
+  export interface OpenEndedQuestion extends BaseQuestion {
     type: typeof QuestionTypes.OPEN_ENDED;
     elements: string[];
     answer: string;
   }
   
   // Now, let's properly extend BaseQuestion for our passage-related questions
-  interface PassageRelatedQuestion extends GrammaireQuestion {
-    
+  export interface PassageRelatedQuestion extends BaseQuestion {
+   type: typeof QuestionTypes.MCQ; 
+  options:string[]; // array of possible answers
+  rightAnswer:string[]; // correct answer
   }
 
 
-// Now we can define the complete PassageQuestion structure
-export interface PassageQuestion {
+// Reading comprehension Question type with passage and related questions
+ export interface ReadingComprehensionQuestion extends BaseQuestion {
     type: typeof QuestionTypes.RC;
     passage: string;  // The reading comprehension text
     relatedQuestions: PassageRelatedQuestion[];  // Array of questions about the passage
   }
+
+  export type Question = 
+| MCQQuestion 
+| MultiMCQQuestion 
+| OpenEndedQuestion 
+| ReadingComprehensionQuestion;

@@ -1,14 +1,14 @@
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { CompositionQuestionSchema } from "@/shared/schemas/composition";
+import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
 import { getOneRandomDoc } from "@/utils/api-helper"; // Shared utility (see step 4)
+
 
 export async function GET() {
   try {
     const question = await getOneRandomDoc(
       prisma.composition,
-      CompositionQuestionSchema
+      OpenEndedQuestionSchema
     );
     
     if (!question) {

@@ -1,14 +1,13 @@
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import {SituationQuestionSchema } from "@/shared/schemas/situation";
+import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
 import { getOneRandomDoc } from "@/utils/api-helper"; // Shared utility (see step 4)
 
 export async function GET() {
   try {
     const question = await getOneRandomDoc(
       prisma.situation,
-      SituationQuestionSchema
+      MultiMCQQuestionSchema
     );
     
     if (!question) {
