@@ -8,4 +8,5 @@ export const OpenEndedQuestionSchema = BaseQuestionSchema.extend({
   answer: z.string(),
 });
 
+// Infer type for Open-Ended question
 export type OpenEndedQuestion = z.infer<typeof OpenEndedQuestionSchema>;

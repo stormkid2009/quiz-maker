@@ -8,4 +8,5 @@ export const MultiMCQQuestionSchema = BaseQuestionSchema.extend({
   rightAnswer: z.array(z.string()).length(2),
 });
 
+// Infer type for Multi-MCQ question
 export type MultiMCQuestion = z.infer<typeof MultiMCQQuestionSchema>;

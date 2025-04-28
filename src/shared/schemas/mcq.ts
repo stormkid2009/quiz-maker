@@ -8,4 +8,6 @@ export const MCQQuestionSchema = BaseQuestionSchema.extend({
   rightAnswer: z.array(z.string()).length(1),  // exactly one correct answer
 })
 
+
+// Infer type for MCQ question
 export type MCQQuestion = z.infer<typeof MCQQuestionSchema>;

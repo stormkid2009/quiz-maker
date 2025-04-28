@@ -27,5 +27,8 @@ export const ReadingComprehensionQuestionSchema = z.object({
   updatedAt: z.date().optional()
 });
 
+
+// Infer type for RelatedQuestion
+// and ReadingComprehensionQuestion
 export type RelatedQuestion = z.infer<typeof RelatedQuestionSchema>;
 export type ReadingComprehensionQuestion = z.infer<typeof ReadingComprehensionQuestionSchema>;

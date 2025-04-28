@@ -25,5 +25,8 @@ export const BaseQuestionSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+
+// Infer type for base question
+// This is the base schema for all questions
 export type BaseQuestion = z.infer<typeof BaseQuestionSchema>;
 
