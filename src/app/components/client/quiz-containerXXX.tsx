@@ -8,7 +8,6 @@ import QuizNav from "./quiz-nav";
 import Question from "../inputs/question";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
-import getCorrectAnswer from "@/utils/getCorrectAnswer";
 
 const QuizContainer: React.FC = () => {
   const [quiz, setQuiz] = useState<QuizType | null>(null);
@@ -34,9 +33,7 @@ const QuizContainer: React.FC = () => {
   }, []);
 
   // Track completion status
-  const [questionStatus, setQuestionStatus] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [questionStatus, setQuestionStatus] = useState<Record<string, boolean>>({});
   const [completedCount, setCompletedCount] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
 
@@ -51,20 +48,7 @@ const QuizContainer: React.FC = () => {
         }
 
         const data = await response.json();
-        console.log(`this is api fetched data `, data);
-
-        // Debug: Log the structure of questions to understand the data
-        console.log(
-          "Questions structure:",
-          data.questions.map((q: any) => ({
-            id: q.id,
-            type: q.type,
-            rightAnswer: q.rightAnswer,
-            correctAnswer: q.correctAnswer,
-            answer: q.answer,
-          })),
-        );
-
+        console.log(`this is api feteched data `,data);
         setQuiz(data);
         setTotalQuestions(calculateTotalQuestions(data));
 
@@ -81,6 +65,7 @@ const QuizContainer: React.FC = () => {
           }
         });
         setQuestionStatus(initialStatus);
+        
       } catch (err) {
         console.error("Failed to fetch quiz:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch quiz");
@@ -95,7 +80,7 @@ const QuizContainer: React.FC = () => {
   // Update completed count when question status changes
   useEffect(() => {
     const completed = Object.values(questionStatus).filter(Boolean).length;
-    console.log(`completed count log`, completed);
+    console.log(`completed count log`,completed);
     setCompletedCount(completed);
   }, [questionStatus]);
 
@@ -112,7 +97,7 @@ const QuizContainer: React.FC = () => {
         [questionId]: selectedAnswers.length > 0,
       }));
     },
-    [],
+    []
   );
 
   const handlePrevious = useCallback(() => {
@@ -121,66 +106,33 @@ const QuizContainer: React.FC = () => {
 
   const handleNext = useCallback(() => {
     if (quiz) {
-      setCurrentQuestionIndex((prevIndex) =>
-        Math.min(quiz.questions.length - 1, prevIndex + 1),
+      setCurrentQuestionIndex((prevIndex) => 
+        Math.min(quiz.questions.length - 1, prevIndex + 1)
       );
     }
   }, [quiz]);
 
-  // Helper function to get the correct answer from a question
-  const getCorrectAnswerX = (question: any): string[] => {
-    // Try different possible property names for the correct answer
-    const possibleAnswerProps = ["rightAnswer", "answer"];
-
-    for (const prop of possibleAnswerProps) {
-      if (question[prop] !== undefined && question[prop] !== null) {
-        // Ensure it's always an array
-        return Array.isArray(question[prop])
-          ? question[prop]
-          : [question[prop]];
-      }
-    }
-
-    console.warn(
-      `No correct answer found for question ${question.id}`,
-      question,
-    );
-    return [];
-  };
-
   const calculateScore = useCallback(() => {
     if (!quiz) return 0;
-
+    
     let totalQuestions = 0;
     let correctAnswers = 0;
-
-    console.log("=== SCORE CALCULATION DEBUG ===");
-    console.log("Current answers:", answers);
-
-    quiz.questions.forEach((question) => {
-      if (
-        question.type === QuestionTypes.MCQ ||
-        question.type === QuestionTypes.MULTI_MCQ
-      ) {
+    
+    quiz.questions.forEach(question => {
+      if (question.type === QuestionTypes.MCQ) {
         totalQuestions++;
-        const userAnswerIndices = answers[question.id] || [];
-        const rightAnswer = getCorrectAnswer(question);
-
-        // Convert indices to actual option values
-        const userAnswerValues = userAnswerIndices.map((index) => {
-          const idx = parseInt(index);
-          return question.options[idx] || index;
-        });
-
-        console.log(`Question ${question.id}:`);
-        console.log(`  User selected indices:`, userAnswerIndices);
-        console.log(`  User actual values:`, userAnswerValues);
-        console.log(`  Correct answer:`, rightAnswer);
-
-        const isCorrect = compareArrays(userAnswerValues, rightAnswer);
-        console.log(`  Is correct:`, isCorrect);
-
-        if (isCorrect) {
+        const userAnswer = answers[question.id] || [];
+        const rightAnswer = question.rightAnswer || [];
+        
+        if (compareArrays(userAnswer, rightAnswer)) {
+          correctAnswers++;
+        }
+      } else if (question.type === QuestionTypes.MULTI_MCQ) {
+        totalQuestions++;
+        const userAnswer = answers[question.id] || [];
+        const rightAnswer = question.rightAnswer || [];
+        
+        if (compareArrays(userAnswer, rightAnswer)) {
           correctAnswers++;
         }
       } else if (question.type === QuestionTypes.RC) {
@@ -188,63 +140,30 @@ const QuizContainer: React.FC = () => {
         rcQuestion.relatedQuestions.forEach((subQuestion, index) => {
           totalQuestions++;
           const subQuestionId = `${question.id}-${index}`;
-          const userAnswerIndices = answers[subQuestionId] || [];
-          const rightAnswer = getCorrectAnswer(subQuestion);
-
-          // Convert indices to actual option values
-          const userAnswerValues = userAnswerIndices.map((index) => {
-            const idx = parseInt(index);
-            return subQuestion.options[idx] || index;
-          });
-
-          console.log(`RC Sub-question ${subQuestionId}:`);
-          console.log(`  User selected indices:`, userAnswerIndices);
-          console.log(`  User actual values:`, userAnswerValues);
-          console.log(`  Correct answer:`, rightAnswer);
-
-          const isCorrect = compareArrays(userAnswerValues, rightAnswer);
-          console.log(`  Is correct:`, isCorrect);
-
-          if (isCorrect) {
+          const userAnswer = answers[subQuestionId] || [];
+          const rightAnswer = subQuestion.rightAnswer || [];
+          
+          if (compareArrays(userAnswer, rightAnswer)) {
             correctAnswers++;
           }
         });
       }
+      // For open-ended questions, we can't automatically grade them
     });
-
-    console.log(`Total questions processed: ${totalQuestions}`);
-    console.log(`Correct answers: ${correctAnswers}`);
-
-    const calculatedScore =
-      totalQuestions > 0
-        ? Math.round((correctAnswers / totalQuestions) * 100)
-        : 0;
-    console.log(`Final score: ${calculatedScore}%`);
-
-    return calculatedScore;
+    
+    console.log(`this is total questions ` ,totalQuestions);
+    return totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
   }, [quiz, answers]);
-
+  
   // Helper function to compare arrays regardless of order
   const compareArrays = (arr1: string[], arr2: string[]): boolean => {
-    if (!arr1 || !arr2) return false;
     if (arr1.length !== arr2.length) return false;
-
-    // Convert to strings and sort for comparison
-    const sorted1 = [...arr1].map(String).sort();
-    const sorted2 = [...arr2].map(String).sort();
-
-    const result = sorted1.every((val, idx) => val === sorted2[idx]);
-    console.log(
-      `    Comparing arrays: ${JSON.stringify(sorted1)} vs ${JSON.stringify(sorted2)} = ${result}`,
-    );
-    return result;
+    const sorted1 = [...arr1].sort();
+    const sorted2 = [...arr2].sort();
+    return sorted1.every((val, idx) => val === sorted2[idx]);
   };
 
   const handleSubmit = useCallback(() => {
-    console.log("=== SUBMIT DEBUG ===");
-    console.log("All answers before submit:", answers);
-    console.log("Quiz data:", quiz);
-
     const calculatedScore = calculateScore();
     setScore(calculatedScore);
     setSubmitted(true);
@@ -292,16 +211,12 @@ const QuizContainer: React.FC = () => {
       {submitted ? (
         <div className="result-screen">
           <h2 className="text-2xl font-bold mb-4">Quiz Completed</h2>
-
+          
           <div className="p-6 bg-green-50 border border-green-200 rounded-lg mb-6">
-            <h3 className="text-xl font-semibold text-green-800 mb-2">
-              Your Results
-            </h3>
+            <h3 className="text-xl font-semibold text-green-800 mb-2">Your Results</h3>
             {score !== null && (
               <div className="mb-4">
-                <p className="text-lg mb-1">
-                  Score: <span className="font-bold">{score}%</span>
-                </p>
+                <p className="text-lg mb-1">Score: <span className="font-bold">{score}%</span></p>
                 <div className="w-full bg-gray-200 rounded-full h-4">
                   <div
                     className="bg-green-600 h-4 rounded-full"
@@ -310,27 +225,12 @@ const QuizContainer: React.FC = () => {
                 </div>
               </div>
             )}
-
+            
             <p className="text-green-700">
               You've answered {completedCount} of {totalQuestions} questions.
             </p>
           </div>
-
-          {/* Debug information in development */}
-          {process.env.NODE_ENV === "development" && (
-            <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-6">
-              <h4 className="font-semibold mb-2">Debug Information</h4>
-              <details>
-                <summary className="cursor-pointer">
-                  View detailed results
-                </summary>
-                <pre className="mt-2 text-xs overflow-auto">
-                  {JSON.stringify({ answers, quiz: quiz?.questions }, null, 2)}
-                </pre>
-              </details>
-            </div>
-          )}
-
+          
           <button
             onClick={() => window.location.reload()}
             className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
@@ -344,13 +244,13 @@ const QuizContainer: React.FC = () => {
             current={currentQuestionIndex + 1}
             total={quiz.questions.length}
           />
-
+          
           <div className="question-completion mt-2 mb-4">
             <div className="text-sm text-gray-600">
               Completed: {completedCount} of {totalQuestions} questions
             </div>
           </div>
-
+          
           <div className="question-container p-6 border border-gray-200 rounded-lg">
             <div className="text-sm text-gray-500 mb-2 flex justify-between">
               <span>Question {currentQuestionIndex + 1}</span>
@@ -358,13 +258,13 @@ const QuizContainer: React.FC = () => {
                 {currentQuestion.type}
               </span>
             </div>
-
+            
             <Question
               question={currentQuestion}
               onAnswerChange={handleAnswerChange}
             />
           </div>
-
+          
           <QuizNav
             currentQuestion={currentQuestionIndex + 1}
             totalQuestions={quiz.questions.length}
