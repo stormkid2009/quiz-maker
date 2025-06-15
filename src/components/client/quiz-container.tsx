@@ -8,7 +8,8 @@ import QuizNav from "./quiz-nav";
 import Question from "../inputs/question";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
-import getCorrectAnswer from "@/utils/getCorrectAnswer";
+import getCorrectAnswer from "@/utils/get-correct-answer";
+import useQuizData from "@/hooks/use-quiz-data";
 
 const QuizContainer: React.FC = () => {
   const [quiz, setQuiz] = useState<QuizType | null>(null);
