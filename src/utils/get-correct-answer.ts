@@ -7,33 +7,36 @@ const indexOfAnswer = {
   e: 4,
 } as const;
 
-type AnswerKey = keyof typeof indexOfAnswer;
-
-interface Question {
+/**
+ * Simplified interface for quiz questions supporting letter-based answers
+ */
+interface QuizQuestion {
   id?: string | number;
   options: string[];
-  rightAnswer?: AnswerKey | AnswerKey[];
-  answer?: AnswerKey | AnswerKey[];
+  rightAnswer?: string | string[];
+  answer?: string | string[];
 }
 
-export const getCorrectAnswer = (question: Question): string[] => {
+export const getCorrectAnswer = (question: QuizQuestion): string[] => {
   // Try different possible property names for the correct answer
-  const possibleAnswerProps: (keyof Question)[] = ["rightAnswer", "answer"];
+  const possibleAnswerProps: (keyof QuizQuestion)[] = ["rightAnswer", "answer"];
 
   for (const prop of possibleAnswerProps) {
     const answerValue = question[prop];
     if (answerValue !== undefined && answerValue !== null) {
       // Ensure it's always an array
-      const answerKeys = Array.isArray(answerValue) ? answerValue : [answerValue];
-      
+      const answerKeys = Array.isArray(answerValue)
+        ? answerValue
+        : [answerValue];
+
       // Map answer keys to actual answer strings from options
       const correctAnswers = answerKeys
-        .map(key => {
-          const index = indexOfAnswer[key as AnswerKey];
+        .map((key) => {
+          const index = indexOfAnswer[key as keyof typeof indexOfAnswer];
           return question.options[index];
         })
-        .filter(answer => answer !== undefined); // Filter out invalid indices
-      
+        .filter((answer) => answer !== undefined); // Filter out invalid indices
+
       if (correctAnswers.length > 0) {
         return correctAnswers;
       }

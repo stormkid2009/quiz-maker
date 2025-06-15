@@ -3,97 +3,44 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Quiz as QuizType } from "@/shared/schemas/quiz";
 import { Question as QuestionType } from "@/shared/schemas/question";
+import type { MCQQuestion } from "@/shared/schemas/mcq";
+import type { MultiMCQuestion } from "@/shared/schemas/multi-mcq";
 import ProgressBar from "./progress-bar";
 import QuizNav from "./quiz-nav";
 import Question from "../inputs/question";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 import getCorrectAnswer from "@/utils/get-correct-answer";
-import useQuizData from "@/hooks/use-quiz-data";
+import { useQuizData } from "@/hooks/use-quiz-data";
 
 const QuizContainer: React.FC = () => {
-  const [quiz, setQuiz] = useState<QuizType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { quiz, loading, error, refetch, totalQuestions } = useQuizData();
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState<number | null>(null);
-
-  // Calculate effective question count (including RC sub-questions)
-  const calculateTotalQuestions = useCallback((quizData: QuizType) => {
-    let count = 0;
-    quizData.questions.forEach((question) => {
-      if (question.type === QuestionTypes.RC) {
-        const rcQuestion = question as ReadingComprehensionQuestion;
-        count += rcQuestion.relatedQuestions.length;
-      } else {
-        count += 1;
-      }
-    });
-    return count;
-  }, []);
-
-  // Track completion status
   const [questionStatus, setQuestionStatus] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
   const [completedCount, setCompletedCount] = useState(0);
-  const [totalQuestions, setTotalQuestions] = useState(0);
 
   useEffect(() => {
-    async function fetchQuiz() {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/v1/quiz");
-
-        if (!response.ok) {
-          throw new Error(`Error fetching quiz: ${response.statusText}`);
+    if (quiz) {
+      const initialStatus: Record<string, boolean> = {};
+      quiz.questions.forEach((question: QuestionType) => {
+        if (question.type === QuestionTypes.RC) {
+          const rcQuestion = question as ReadingComprehensionQuestion;
+          rcQuestion.relatedQuestions.forEach((_, index) => {
+            initialStatus[`${question.id}-${index}`] = false;
+          });
+        } else {
+          initialStatus[question.id] = false;
         }
-
-        const data = await response.json();
-        console.log(`this is api fetched data `, data);
-
-        // Debug: Log the structure of questions to understand the data
-        console.log(
-          "Questions structure:",
-          data.questions.map((q: any) => ({
-            id: q.id,
-            type: q.type,
-            rightAnswer: q.rightAnswer,
-            correctAnswer: q.correctAnswer,
-            answer: q.answer,
-          })),
-        );
-
-        setQuiz(data);
-        setTotalQuestions(calculateTotalQuestions(data));
-
-        // Initialize status tracking for all questions
-        const initialStatus: Record<string, boolean> = {};
-        data.questions.forEach((question: QuestionType) => {
-          if (question.type === QuestionTypes.RC) {
-            const rcQuestion = question as ReadingComprehensionQuestion;
-            rcQuestion.relatedQuestions.forEach((_, index) => {
-              initialStatus[`${question.id}-${index}`] = false;
-            });
-          } else {
-            initialStatus[question.id] = false;
-          }
-        });
-        setQuestionStatus(initialStatus);
-      } catch (err) {
-        console.error("Failed to fetch quiz:", err);
-        setError(err instanceof Error ? err.message : "Failed to fetch quiz");
-      } finally {
-        setLoading(false);
-      }
+      });
+      setQuestionStatus(initialStatus);
     }
+  }, [quiz]);
 
-    fetchQuiz();
-  }, [calculateTotalQuestions]);
-
-  // Update completed count when question status changes
   useEffect(() => {
     const completed = Object.values(questionStatus).filter(Boolean).length;
     console.log(`completed count log`, completed);
@@ -107,13 +54,12 @@ const QuizContainer: React.FC = () => {
         [questionId]: selectedAnswers,
       }));
 
-      // Mark question as completed if it has answers
       setQuestionStatus((prev) => ({
         ...prev,
         [questionId]: selectedAnswers.length > 0,
       }));
     },
-    [],
+    []
   );
 
   const handlePrevious = useCallback(() => {
@@ -123,19 +69,16 @@ const QuizContainer: React.FC = () => {
   const handleNext = useCallback(() => {
     if (quiz) {
       setCurrentQuestionIndex((prevIndex) =>
-        Math.min(quiz.questions.length - 1, prevIndex + 1),
+        Math.min(quiz.questions.length - 1, prevIndex + 1)
       );
     }
   }, [quiz]);
 
-  // Helper function to get the correct answer from a question
   const getCorrectAnswerX = (question: any): string[] => {
-    // Try different possible property names for the correct answer
     const possibleAnswerProps = ["rightAnswer", "answer"];
 
     for (const prop of possibleAnswerProps) {
       if (question[prop] !== undefined && question[prop] !== null) {
-        // Ensure it's always an array
         return Array.isArray(question[prop])
           ? question[prop]
           : [question[prop]];
@@ -144,10 +87,15 @@ const QuizContainer: React.FC = () => {
 
     console.warn(
       `No correct answer found for question ${question.id}`,
-      question,
+      question
     );
     return [];
   };
+
+  const isMCQ = (q: QuestionType): q is MCQQuestion =>
+    q.type === QuestionTypes.MCQ;
+  const isMultiMCQ = (q: QuestionType): q is MultiMCQuestion =>
+    q.type === QuestionTypes.MULTI_MCQ;
 
   const calculateScore = useCallback(() => {
     if (!quiz) return 0;
@@ -159,15 +107,11 @@ const QuizContainer: React.FC = () => {
     console.log("Current answers:", answers);
 
     quiz.questions.forEach((question) => {
-      if (
-        question.type === QuestionTypes.MCQ ||
-        question.type === QuestionTypes.MULTI_MCQ
-      ) {
+      if (isMCQ(question) || isMultiMCQ(question)) {
         totalQuestions++;
         const userAnswerIndices = answers[question.id] || [];
         const rightAnswer = getCorrectAnswer(question);
 
-        // Convert indices to actual option values
         const userAnswerValues = userAnswerIndices.map((index) => {
           const idx = parseInt(index);
           return question.options[idx] || index;
@@ -192,7 +136,6 @@ const QuizContainer: React.FC = () => {
           const userAnswerIndices = answers[subQuestionId] || [];
           const rightAnswer = getCorrectAnswer(subQuestion);
 
-          // Convert indices to actual option values
           const userAnswerValues = userAnswerIndices.map((index) => {
             const idx = parseInt(index);
             return subQuestion.options[idx] || index;
@@ -225,18 +168,18 @@ const QuizContainer: React.FC = () => {
     return calculatedScore;
   }, [quiz, answers]);
 
-  // Helper function to compare arrays regardless of order
   const compareArrays = (arr1: string[], arr2: string[]): boolean => {
     if (!arr1 || !arr2) return false;
     if (arr1.length !== arr2.length) return false;
 
-    // Convert to strings and sort for comparison
     const sorted1 = [...arr1].map(String).sort();
     const sorted2 = [...arr2].map(String).sort();
 
     const result = sorted1.every((val, idx) => val === sorted2[idx]);
     console.log(
-      `    Comparing arrays: ${JSON.stringify(sorted1)} vs ${JSON.stringify(sorted2)} = ${result}`,
+      `    Comparing arrays: ${JSON.stringify(sorted1)} vs ${JSON.stringify(
+        sorted2
+      )} = ${result}`
     );
     return result;
   };
@@ -317,7 +260,6 @@ const QuizContainer: React.FC = () => {
             </p>
           </div>
 
-          {/* Debug information in development */}
           {process.env.NODE_ENV === "development" && (
             <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-6">
               <h4 className="font-semibold mb-2">Debug Information</h4>
