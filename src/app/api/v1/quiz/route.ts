@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { QuestionSchema, type Question } from "@/shared/schemas/question";
+import { type Question } from "@/shared/schemas/question";
 import { MCQQuestionSchema } from "@/shared/schemas/mcq";
-import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
+//import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
 import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
 import { QuizSchema, type Quiz } from "@/shared/schemas/quiz";
 import { testDatabaseConnection } from "@/utils/database";
 import { getOneRandomDoc } from "@/utils/api-helper";
 import { logApiError, logInfo } from "@/utils/updated-logger";
-import { Messages, ApiResponse } from "@/types/common";
+import { Messages } from "@/types/common";
 
 const msg: Messages = {
   success: "successfully retrieve random question",
@@ -25,14 +25,18 @@ const msg: Messages = {
  * @param details Optional error details
  * @param status HTTP status code (defaults to 500)
  */
-function createErrorResponse(message: string, details: any = null, status: number = 500) {
+function createErrorResponse(
+  message: string,
+  details: any = null,
+  status: number = 500,
+) {
   return NextResponse.json(
     {
       success: false,
       message,
       details,
     },
-    { status }
+    { status },
   );
 }
 
@@ -51,7 +55,7 @@ export async function GET(request: Request) {
       const dbError = new Error(msg.dbIssues);
       await logApiError(msg.dbIssues, dbError, {
         request,
-        statusCode: 500
+        statusCode: 500,
       });
       return createErrorResponse(msg.dbIssues);
     }
@@ -62,7 +66,7 @@ export async function GET(request: Request) {
     try {
       const grammaire = await getOneRandomDoc(
         prisma.grammaire,
-        MCQQuestionSchema
+        MCQQuestionSchema,
       );
       if (grammaire) {
         // Ensure type is literal value
@@ -76,12 +80,13 @@ export async function GET(request: Request) {
       const error = e instanceof Error ? e : new Error(String(e));
       await logApiError("Failed to fetch grammaire question", error, {
         request,
-        statusCode: 500
+        statusCode: 500,
       });
       console.error("Failed to fetch grammaire:", e);
     }
 
     // Fetch Composition (Open-Ended)
+    /*
     try {
       const composition = await getOneRandomDoc(
         prisma.composition,
@@ -103,12 +108,13 @@ export async function GET(request: Request) {
       });
       console.error("Failed to fetch composition:", e);
     }
+    */
 
     // Fetch Passage (Reading Comprehension)
     try {
       const passage = await getOneRandomDoc(
         prisma.passage,
-        ReadingComprehensionQuestionSchema
+        ReadingComprehensionQuestionSchema,
       );
       if (passage) {
         // Ensure type is literal value
@@ -126,7 +132,7 @@ export async function GET(request: Request) {
       const error = e instanceof Error ? e : new Error(String(e));
       await logApiError("Failed to fetch passage question", error, {
         request,
-        statusCode: 500
+        statusCode: 500,
       });
       console.error("Failed to fetch passage:", e);
     }
@@ -135,7 +141,7 @@ export async function GET(request: Request) {
     try {
       const situation = await getOneRandomDoc(
         prisma.situation,
-        MultiMCQQuestionSchema
+        MultiMCQQuestionSchema,
       );
       if (situation) {
         // Ensure type is literal value
@@ -149,17 +155,21 @@ export async function GET(request: Request) {
       const error = e instanceof Error ? e : new Error(String(e));
       await logApiError("Failed to fetch situation question", error, {
         request,
-        statusCode: 500
+        statusCode: 500,
       });
       console.error("Failed to fetch situation:", e);
     }
 
     if (questions.length === 0) {
       const noQuestionsError = new Error("No valid questions found");
-      await logApiError("No valid questions were found in any collection", noQuestionsError, {
-        request,
-        statusCode: 404
-      });
+      await logApiError(
+        "No valid questions were found in any collection",
+        noQuestionsError,
+        {
+          request,
+          statusCode: 404,
+        },
+      );
       return createErrorResponse("No valid questions found", null, 404);
     }
 
@@ -172,18 +182,21 @@ export async function GET(request: Request) {
 
       return NextResponse.json(quiz);
     } catch (parseError: unknown) {
-      const error = parseError instanceof Error ? parseError : new Error("Schema parse error");
+      const error =
+        parseError instanceof Error
+          ? parseError
+          : new Error("Schema parse error");
 
       // For Zod validation errors, we can extract the detailed errors
-      const details = parseError &&
-        typeof parseError === 'object' &&
-        'errors' in parseError ?
-        (parseError as { errors: unknown }).errors : null;
+      const details =
+        parseError && typeof parseError === "object" && "errors" in parseError
+          ? (parseError as { errors: unknown }).errors
+          : null;
 
       await logApiError("Quiz schema validation error", error, {
         request,
         statusCode: 400,
-        requestBody: { questionCount: questions.length }
+        requestBody: { questionCount: questions.length },
       });
 
       console.error("Quiz schema validation error:", parseError);
@@ -195,45 +208,10 @@ export async function GET(request: Request) {
 
     await logApiError("Unhandled error in quiz API", error, {
       request,
-      statusCode: 500
+      statusCode: 500,
     });
 
     console.error("Unhandled error in quiz API:", err);
     return createErrorResponse(errorMessage);
   }
-}
-
-/**
- * Method not allowed handler for other HTTP methods
- */
-export async function POST(request: Request) {
-  await logApiError("Method not allowed", new Error("POST method not supported"), {
-    request,
-    statusCode: 405
-  });
-  return createErrorResponse(msg.wrongMethod, null, 405);
-}
-
-export async function PUT(request: Request) {
-  await logApiError("Method not allowed", new Error("PUT method not supported"), {
-    request,
-    statusCode: 405
-  });
-  return createErrorResponse(msg.wrongMethod, null, 405);
-}
-
-export async function DELETE(request: Request) {
-  await logApiError("Method not allowed", new Error("DELETE method not supported"), {
-    request,
-    statusCode: 405
-  });
-  return createErrorResponse(msg.wrongMethod, null, 405);
-}
-
-export async function PATCH(request: Request) {
-  await logApiError("Method not allowed", new Error("PATCH method not supported"), {
-    request,
-    statusCode: 405
-  });
-  return createErrorResponse(msg.wrongMethod, null, 405);
 }
