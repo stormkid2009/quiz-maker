@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Quiz as QuizType } from "@/shared/schemas/quiz";
-import { Question as QuestionType } from "@/shared/schemas/question";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 
@@ -38,7 +37,7 @@ export const useQuizData = (): UseQuizDataReturn => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch("/api/v1/quiz");
 
       if (!response.ok) {
@@ -57,7 +56,7 @@ export const useQuizData = (): UseQuizDataReturn => {
           rightAnswer: q.rightAnswer,
           correctAnswer: q.correctAnswer,
           answer: q.answer,
-        }))
+        })),
       );
 
       setQuiz(data);
