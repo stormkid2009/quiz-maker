@@ -1,13 +1,13 @@
 import React from "react";
-import Composition from "@/app/components/server/composition";
+import Grammaire from "@/components/server/grammaire";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Composition Questions",
-  description: "Practice with open-ended writing questions",
+  title: "Grammar Questions",
+  description: "Practice grammar with multiple-choice questions",
 };
 
-export default function CompositionPage() {
+export default function GrammairePage() {
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="mb-6 flex items-center">
@@ -16,14 +16,14 @@ export default function CompositionPage() {
         </Link>
       </div>
 
-      <h1 className="text-3xl font-bold mb-6">Composition Questions</h1>
+      <h1 className="text-3xl font-bold mb-6">Grammar Questions</h1>
       <p className="text-gray-600 mb-8">
-        Open-ended writing prompts to test your writing skills. Express your
-        thoughts in the text area provided.
+        Test your grammar knowledge with these multiple-choice questions. Each
+        question has one correct answer.
       </p>
 
       <div className="bg-white p-6 rounded-lg shadow-sm">
-        <Composition />
+        <Grammaire />
       </div>
 
       <div className="mt-8 text-center">

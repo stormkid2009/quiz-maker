@@ -1,5 +1,5 @@
 import React from 'react';
-import Passage from '@/app/components/server/passage';
+import Passage from '@/components/server/passage';
 import Link from 'next/link';
 
 export const metadata = {
