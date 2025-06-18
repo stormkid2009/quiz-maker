@@ -1,5 +1,5 @@
 import React from "react";
-import Situation from "@/components/server/situation";
+import Situation from "@/components/training/situation";
 import Link from "next/link";
 
 export const metadata = {

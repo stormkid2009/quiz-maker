@@ -1,5 +1,5 @@
 import React from "react";
-import Grammaire from "@/components/server/grammaire";
+import Grammaire from "@/components/training/grammaire";
 import Link from "next/link";
 
 export const metadata = {

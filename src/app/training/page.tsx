@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import Grammaire from "@/components/server/grammaire";
-import Situation from "@/components/server/situation";
-import Composition from "@/components/server/composition";
-import Passage from "@/components/server/passage";
+import Grammaire from "@/components/training/grammaire";
+import Situation from "@/components/training/situation";
+import Composition from "@/components/training/composition";
+import Passage from "@/components/training/passage";
 
 export const metadata = {
   title: "Question Types",
-  description: "Train yourself with exploring different types of questions in our quiz system",
+  description:
+    "Train yourself with exploring different types of questions in our quiz system",
 };
 
 export default function QuestionsPage() {

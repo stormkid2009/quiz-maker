@@ -1,6 +1,6 @@
 import React from "react";
 import Question from "../inputs/question";
-import CompositionWrapper from "@/components/server/wrappers/composition-wrapper";
+import CompositionWrapper from "@/components/training/wrappers/composition-wrapper";
 
 async function getCompositionQuestion() {
   try {
@@ -12,12 +12,12 @@ async function getCompositionQuestion() {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch composition question: ${response.statusText}`,
+        `Failed to fetch composition question: ${response.statusText}`
       );
     }
 
