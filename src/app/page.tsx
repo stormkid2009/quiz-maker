@@ -44,10 +44,10 @@ export default function Home() {
           </Link>
 
           <Link
-            href="/questions"
+            href="/training"
             className="inline-block px-8 py-4 bg-gray-200 text-gray-800 font-semibold text-lg rounded-lg transition-colors hover:bg-gray-300"
           >
-            Explore Question Types
+            Train yourself on different types of questions
           </Link>
         </div>
       </div>
