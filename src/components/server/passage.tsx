@@ -1,6 +1,5 @@
 import React from "react";
-import Question from "../inputs/question";
-import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
+import PassageWrapper from "./wrappers/passage-wrapper";
 
 async function getPassageQuestion() {
   try {
@@ -50,23 +49,10 @@ export default async function Passage({
     <div className="passage-question p-4 border border-amber-200 rounded-lg bg-amber-50">
       <h2 className="text-lg font-semibold mb-2">Reading Comprehension</h2>
 
-      <ClientQuestionWrapper
+      <PassageWrapper
         question={question}
         onAnswerChange={onAnswerChange}
       />
     </div>
   );
-}
-
-// Client component wrapper to handle the client-side interactions
-("use client");
-
-function ClientQuestionWrapper({
-  question,
-  onAnswerChange,
-}: {
-  question: ReadingComprehensionQuestion;
-  onAnswerChange: (questionId: string, answers: string[]) => void;
-}) {
-  return <Question question={question} onAnswerChange={onAnswerChange} />;
 }

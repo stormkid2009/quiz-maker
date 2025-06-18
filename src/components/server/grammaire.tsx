@@ -1,6 +1,5 @@
 import React from "react";
-import { MCQQuestion } from "@/shared/schemas/mcq";
-import Question from "../inputs/question";
+import GrammaireWrapper from "@/components/server/wrappers/grammaire-wrapper";
 
 async function getGrammaireQuestion() {
   try {
@@ -12,12 +11,12 @@ async function getGrammaireQuestion() {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch grammaire question: ${response.statusText}`
+        `Failed to fetch grammaire question: ${response.statusText}`,
       );
     }
 
@@ -50,23 +49,10 @@ export default async function Grammaire({
     <div className="grammaire-question p-4 border border-blue-200 rounded-lg bg-blue-50">
       <h2 className="text-lg font-semibold mb-2">Grammar Question</h2>
 
-      <ClientQuestionWrapper
+      <GrammaireWrapper
         question={question}
         onAnswerChange={onAnswerChange}
       />
     </div>
   );
-}
-
-// This is a client component wrapper to handle the client-side interactions
-("use client");
-
-function ClientQuestionWrapper({
-  question,
-  onAnswerChange,
-}: {
-  question: MCQQuestion;
-  onAnswerChange: (questionId: string, answers: string[]) => void;
-}) {
-  return <Question question={question} onAnswerChange={onAnswerChange} />;
 }

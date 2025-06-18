@@ -1,5 +1,5 @@
 import React from "react";
-import Question from "../inputs/question";
+import SituationWrapper from "./wrappers/situation-wrapper";
 
 async function getSituationQuestion() {
   try {
@@ -51,23 +51,10 @@ export default async function Situation({
         Situation Question (Multi-Choice)
       </h2>
 
-      <ClientQuestionWrapper
+      <SituationWrapper
         question={question}
         onAnswerChange={onAnswerChange}
       />
     </div>
   );
-}
-
-// Client component wrapper to handle the client-side interactions
-("use client");
-
-function ClientQuestionWrapper({
-  question,
-  onAnswerChange,
-}: {
-  question: any;
-  onAnswerChange: (questionId: string, answers: string[]) => void;
-}) {
-  return <Question question={question} onAnswerChange={onAnswerChange} />;
 }

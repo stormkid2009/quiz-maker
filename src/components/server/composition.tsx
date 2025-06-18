@@ -1,5 +1,6 @@
 import React from "react";
 import Question from "../inputs/question";
+import CompositionWrapper from "@/components/server/wrappers/composition-wrapper";
 
 async function getCompositionQuestion() {
   try {
@@ -11,12 +12,12 @@ async function getCompositionQuestion() {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch composition question: ${response.statusText}`
+        `Failed to fetch composition question: ${response.statusText}`,
       );
     }
 
@@ -49,23 +50,7 @@ export default async function Composition({
     <div className="composition-question p-4 border border-green-200 rounded-lg bg-green-50">
       <h2 className="text-lg font-semibold mb-2">Writing Composition</h2>
 
-      <ClientQuestionWrapper
-        question={question}
-        onAnswerChange={onAnswerChange}
-      />
+      <CompositionWrapper question={question} onAnswerChange={onAnswerChange} />
     </div>
   );
-}
-
-// Client component wrapper to handle the client-side interactions
-("use client");
-
-function ClientQuestionWrapper({
-  question,
-  onAnswerChange,
-}: {
-  question: any;
-  onAnswerChange: (questionId: string, answers: string[]) => void;
-}) {
-  return <Question question={question} onAnswerChange={onAnswerChange} />;
 }
