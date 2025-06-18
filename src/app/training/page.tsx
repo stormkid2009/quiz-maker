@@ -26,7 +26,7 @@ export default function QuestionsPage() {
           <div className="bg-blue-100 px-4 py-3 flex justify-between items-center">
             <h2 className="text-xl font-semibold">Grammar (MCQ)</h2>
             <Link
-              href="/questions/grammaire"
+              href="/training/grammaire"
               className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
             >
               Practice More
@@ -41,7 +41,7 @@ export default function QuestionsPage() {
           <div className="bg-purple-100 px-4 py-3 flex justify-between items-center">
             <h2 className="text-xl font-semibold">Situation (Multi-MCQ)</h2>
             <Link
-              href="/questions/situation"
+              href="/training/situation"
               className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
             >
               Practice More
@@ -56,7 +56,7 @@ export default function QuestionsPage() {
           <div className="bg-green-100 px-4 py-3 flex justify-between items-center">
             <h2 className="text-xl font-semibold">Composition (Open-Ended)</h2>
             <Link
-              href="/questions/composition"
+              href="/training/composition"
               className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
             >
               Practice More
@@ -71,7 +71,7 @@ export default function QuestionsPage() {
           <div className="bg-amber-100 px-4 py-3 flex justify-between items-center">
             <h2 className="text-xl font-semibold">Reading Comprehension</h2>
             <Link
-              href="/questions/passage"
+              href="/training/passage"
               className="px-3 py-1 bg-amber-600 text-white text-sm rounded hover:bg-amber-700"
             >
               Practice More
