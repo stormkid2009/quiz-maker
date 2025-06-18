@@ -1,5 +1,5 @@
 import React from "react";
-import QuizContainer from "@/components/client/quiz-container";
+import QuizContainer from "@/components/quiz/quiz-container";
 
 export const metadata = {
   title: "Quiz",
