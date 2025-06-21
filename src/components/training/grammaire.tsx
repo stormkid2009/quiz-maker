@@ -4,7 +4,7 @@ import GrammaireWrapper from "@/components/training/wrappers/grammaire-wrapper";
 async function getGrammaireQuestion() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/grammaire`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/grammaire`,
       {
         method: "GET",
         cache: "no-store",
@@ -19,21 +19,16 @@ async function getGrammaireQuestion() {
         `Failed to fetch grammaire question: ${response.statusText}`
       );
     }
-
-    return await response.json();
+    const data = await response.json();
+    console.log(`this is fetched data from api: `, data);
+    return data;
   } catch (error) {
     console.error("Error fetching grammaire question:", error);
     return null;
   }
 }
 
-interface GrammaireProps {
-  onAnswerChange?: (questionId: string, answers: string[]) => void;
-}
-
-export default async function Grammaire({
-  onAnswerChange = () => {},
-}: GrammaireProps) {
+export default async function Grammaire() {
   const question = await getGrammaireQuestion();
 
   if (!question) {
@@ -49,7 +44,7 @@ export default async function Grammaire({
     <div className="grammaire-question p-4 border border-blue-200 rounded-lg bg-blue-50">
       <h2 className="text-lg font-semibold mb-2">Grammar Question</h2>
 
-      <GrammaireWrapper question={question} onAnswerChange={onAnswerChange} />
+      <GrammaireWrapper question={question} />
     </div>
   );
 }

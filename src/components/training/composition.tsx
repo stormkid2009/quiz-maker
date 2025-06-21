@@ -5,7 +5,7 @@ import CompositionWrapper from "@/components/training/wrappers/composition-wrapp
 async function getCompositionQuestion() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/composition`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/composition`,
       {
         method: "GET",
         cache: "no-store",
@@ -28,13 +28,7 @@ async function getCompositionQuestion() {
   }
 }
 
-interface CompositionProps {
-  onAnswerChange?: (questionId: string, answers: string[]) => void;
-}
-
-export default async function Composition({
-  onAnswerChange = () => {},
-}: CompositionProps) {
+export default async function Composition() {
   const question = await getCompositionQuestion();
 
   if (!question) {
@@ -50,7 +44,7 @@ export default async function Composition({
     <div className="composition-question p-4 border border-green-200 rounded-lg bg-green-50">
       <h2 className="text-lg font-semibold mb-2">Writing Composition</h2>
 
-      <CompositionWrapper question={question} onAnswerChange={onAnswerChange} />
+      <CompositionWrapper question={question} />
     </div>
   );
 }

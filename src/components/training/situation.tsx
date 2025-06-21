@@ -4,7 +4,7 @@ import SituationWrapper from "./wrappers/situation-wrapper";
 async function getSituationQuestion() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/situation`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/situation`,
       {
         method: "GET",
         cache: "no-store",
@@ -27,13 +27,7 @@ async function getSituationQuestion() {
   }
 }
 
-interface SituationProps {
-  onAnswerChange?: (questionId: string, answers: string[]) => void;
-}
-
-export default async function Situation({
-  onAnswerChange = () => {},
-}: SituationProps) {
+export default async function Situation() {
   const question = await getSituationQuestion();
 
   if (!question) {
@@ -51,10 +45,7 @@ export default async function Situation({
         Situation Question (Multi-Choice)
       </h2>
 
-      <SituationWrapper
-        question={question}
-        onAnswerChange={onAnswerChange}
-      />
+      <SituationWrapper question={question} />
     </div>
   );
 }

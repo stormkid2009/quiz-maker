@@ -4,7 +4,7 @@ import PassageWrapper from "./wrappers/passage-wrapper";
 async function getPassageQuestion() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/passage`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/passage`,
       {
         method: "GET",
         cache: "no-store",
@@ -27,13 +27,7 @@ async function getPassageQuestion() {
   }
 }
 
-interface PassageProps {
-  onAnswerChange?: (questionId: string, answers: string[]) => void;
-}
-
-export default async function Passage({
-  onAnswerChange = () => {},
-}: PassageProps) {
+export default async function Passage() {
   const question = await getPassageQuestion();
 
   if (!question) {
@@ -49,10 +43,7 @@ export default async function Passage({
     <div className="passage-question p-4 border border-amber-200 rounded-lg bg-amber-50">
       <h2 className="text-lg font-semibold mb-2">Reading Comprehension</h2>
 
-      <PassageWrapper
-        question={question}
-        onAnswerChange={onAnswerChange}
-      />
+      <PassageWrapper question={question} />
     </div>
   );
 }
