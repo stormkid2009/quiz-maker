@@ -1,35 +1,26 @@
 "use client";
 
 import React from "react";
+import { useQuestionActions } from "@/hooks/use-question-actions";
 
 interface QuestionActionsProps {
   loadButtonText?: string;
   onShowAnswer?: () => void;
   onLoadNew?: () => void;
+  customEventName?: string;
 }
 
 export default function QuestionActions({
   loadButtonText = "Load Another Question",
   onShowAnswer,
   onLoadNew,
+  customEventName,
 }: QuestionActionsProps) {
-  const handleShowAnswer = () => {
-    if (onShowAnswer) {
-      onShowAnswer();
-    } else {
-      // Default behavior: dispatch custom event
-      window.dispatchEvent(new CustomEvent("showAnswer"));
-    }
-  };
-
-  const handleLoadNew = () => {
-    if (onLoadNew) {
-      onLoadNew();
-    } else {
-      // Default behavior: reload page
-      window.location.reload();
-    }
-  };
+  const { handleShowAnswer, handleLoadNew } = useQuestionActions({
+    onShowAnswer,
+    onLoadNew,
+    customEventName,
+  });
 
   return (
     <div className="mt-8 text-center space-x-4">
