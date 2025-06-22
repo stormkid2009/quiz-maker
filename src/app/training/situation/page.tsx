@@ -1,6 +1,6 @@
 import React from "react";
-import Situation from "@/components/training/situation";
-import SituationPageWrapper from "@/components/question-page-wrappers/situation-wrapper";
+import Situation from "@/components/server-questions/situation";
+import SituationPageWrapper from "@/components/wrappers/question-pages/situation-wrapper";
 
 export const metadata = {
   title: "Situation Questions",

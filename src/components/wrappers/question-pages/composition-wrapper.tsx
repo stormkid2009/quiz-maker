@@ -1,5 +1,6 @@
 "use client";
 
+// client component wrapper for composition question in question pages
 import React from "react";
 import Link from "next/link";
 import QuestionActions from "@/components/buttons/question-actions";

@@ -1,6 +1,6 @@
 import React from "react";
-import Passage from "@/components/training/passage";
-import PassagePageWrapper from "@/components/question-page-wrappers/passage-wrapper";
+import Passage from "@/components/server-questions/passage";
+import PassagePageWrapper from "@/components/wrappers/question-pages/passage-wrapper";
 
 export const metadata = {
   title: "Reading Comprehension",

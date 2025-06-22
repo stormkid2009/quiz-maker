@@ -1,5 +1,6 @@
 "use client";
 
+// client component wrapper for situation question in home training page
 import React from "react";
 import Question from "@/components/inputs/question";
 

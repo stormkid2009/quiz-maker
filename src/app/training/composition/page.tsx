@@ -1,6 +1,6 @@
 import React from "react";
-import Composition from "@/components/training/composition";
-import CompositionPageWrapper from "@/components/question-page-wrappers/composition-wrapper";
+import Composition from "@/components/server-questions/composition";
+import CompositionPageWrapper from "@/components/wrappers/question-pages/composition-wrapper";
 
 export const metadata = {
   title: "Composition Questions",

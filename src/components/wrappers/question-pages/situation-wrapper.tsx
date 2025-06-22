@@ -1,20 +1,21 @@
 "use client";
 
+// client component wrapper for situation question in question pages
 import React from "react";
 import Link from "next/link";
 import QuestionActions from "@/components/buttons/question-actions";
 
-interface PassagePageWrapperProps {
+interface SituationPageWrapperProps {
   title: string;
   description: string;
   children: React.ReactNode;
 }
 
-export default function PassagePageWrapper({
+export default function SituationPageWrapper({
   title,
   description,
   children,
-}: PassagePageWrapperProps) {
+}: SituationPageWrapperProps) {
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="mb-6 flex items-center">
@@ -28,7 +29,7 @@ export default function PassagePageWrapper({
 
       <div className="bg-white p-6 rounded-lg shadow-sm">{children}</div>
 
-      <QuestionActions loadButtonText="Load Another Passage" />
+      <QuestionActions />
     </main>
   );
 }

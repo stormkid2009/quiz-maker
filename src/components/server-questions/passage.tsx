@@ -1,5 +1,5 @@
 import React from "react";
-import PassageWrapper from "./wrappers/passage-wrapper";
+import PassageWrapper from "@/components/wrappers/training-home/passage-wrapper";
 
 async function getPassageQuestion() {
   try {

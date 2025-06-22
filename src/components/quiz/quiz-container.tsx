@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Quiz as QuizType } from "@/shared/schemas/quiz";
+//import { Quiz as QuizType } from "@/shared/schemas/quiz";
 import ProgressBar from "./progress-bar";
 import QuizNav from "./quiz-nav";
 import Question from "../inputs/question";

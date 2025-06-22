@@ -1,10 +1,10 @@
 "use client";
 
+// client component wrapper for composition question in home training page
 import React from "react";
 import Question from "@/components/inputs/question";
-import { MCQQuestion } from "@/shared/schemas/mcq";
 
-const GrammaireWrapper = ({ question }: { question: MCQQuestion }) => {
+const CompositionWrapper = ({ question }: { question: any }) => {
   const handleAnswerChange = (questionId: string, answers: string[]) => {
     // Handle answer changes here
     console.log(`Question ${questionId} answers changed to:`, answers);
@@ -18,4 +18,4 @@ const GrammaireWrapper = ({ question }: { question: MCQQuestion }) => {
   return <Question question={question} onAnswerChange={handleAnswerChange} />;
 };
 
-export default GrammaireWrapper;
+export default CompositionWrapper;

@@ -1,5 +1,5 @@
 import React from "react";
-import GrammaireWrapper from "@/components/training/wrappers/grammaire-wrapper";
+import GrammaireWrapper from "@/components/wrappers/training-home/grammaire-wrapper";
 
 async function getGrammaireQuestion() {
   try {

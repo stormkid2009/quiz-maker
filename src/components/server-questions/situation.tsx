@@ -1,5 +1,5 @@
 import React from "react";
-import SituationWrapper from "./wrappers/situation-wrapper";
+import SituationWrapper from "@/components/wrappers/training-home/situation-wrapper";
 
 async function getSituationQuestion() {
   try {

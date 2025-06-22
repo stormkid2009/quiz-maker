@@ -1,6 +1,6 @@
 import React from "react";
-import Question from "../inputs/question";
-import CompositionWrapper from "@/components/training/wrappers/composition-wrapper";
+//import Question from "../inputs/question";
+import CompositionWrapper from "@/components/wrappers/training-home/composition-wrapper";
 
 async function getCompositionQuestion() {
   try {

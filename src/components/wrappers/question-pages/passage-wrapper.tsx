@@ -1,24 +1,25 @@
 "use client";
 
+// client component wrapper for passage question in question pages
 import React from "react";
 import Link from "next/link";
 import QuestionActions from "@/components/buttons/question-actions";
 
-interface GrammairePageWrapperProps {
+interface PassagePageWrapperProps {
   title: string;
   description: string;
   children: React.ReactNode;
 }
 
-export default function GrammairePageWrapper({
+export default function PassagePageWrapper({
   title,
   description,
   children,
-}: GrammairePageWrapperProps) {
+}: PassagePageWrapperProps) {
   return (
     <main className="container mx-auto py-8 px-4">
       <div className="mb-6 flex items-center">
-        <Link href="/training" className="text-blue-600 hover:underline mr-4">
+        <Link href="/questions" className="text-blue-600 hover:underline mr-4">
           ← Back to All Questions
         </Link>
       </div>
@@ -28,7 +29,7 @@ export default function GrammairePageWrapper({
 
       <div className="bg-white p-6 rounded-lg shadow-sm">{children}</div>
 
-      <QuestionActions />
+      <QuestionActions loadButtonText="Load Another Passage" />
     </main>
   );
 }

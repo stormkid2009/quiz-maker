@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import Grammaire from "@/components/training/grammaire";
-import Situation from "@/components/training/situation";
-import Composition from "@/components/training/composition";
-import Passage from "@/components/training/passage";
+import Grammaire from "@/components/server-questions/grammaire";
+import Situation from "@/components/server-questions/situation";
+import Composition from "@/components/server-questions/composition";
+import Passage from "@/components/server-questions/passage";
 
 export const metadata = {
   title: "Question Types",
