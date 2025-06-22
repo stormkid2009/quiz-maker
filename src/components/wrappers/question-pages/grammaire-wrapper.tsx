@@ -10,12 +10,14 @@ interface GrammairePageWrapperProps {
   title: string;
   description: string;
   children: React.ReactNode;
+  rightAnswer: string;
 }
 
 export default function GrammairePageWrapper({
   title,
   description,
   children,
+  rightAnswer,
 }: GrammairePageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
@@ -42,9 +44,9 @@ export default function GrammairePageWrapper({
       <p className="text-gray-600 mb-8">{description}</p>
 
       <div className="bg-white p-6 rounded-lg shadow-sm">{children}</div>
-      {isAnswerVisible && <p>This is the hidden answer!</p>}
+      {isAnswerVisible && <p>This is the hidden answer: {rightAnswer}</p>}
 
-{/* 
+      {/* 
   We pass our logic functions as props to QuestionActions.
   QuestionActions will then pass them to the useQuestionActions hook.
 */}
