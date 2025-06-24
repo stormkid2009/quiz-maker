@@ -1,13 +1,13 @@
 import React from "react";
-import Grammaire from "@/components/server/question-pages/grammaire-server";
+import GrammaireServer from "@/components/server/question-pages/grammaire-server";
 
 export const metadata = {
   title: "Grammar Questions",
   description: "Practice grammar with multiple-choice questions",
 };
 
-export default async function GrammairePage() {
+export default  function GrammairePage() {
   return (
-<Grammaire />
+<GrammaireServer />
   );
 }

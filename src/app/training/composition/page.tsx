@@ -1,5 +1,5 @@
 import React from "react";
-import Composition from "@/components/server/question-pages/composition-server";
+import CompositionServer from "@/components/server/question-pages/composition-server";
 
 export const metadata = {
   title: "Composition Questions",
@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function CompositionPage() {
   return (
-    <Composition />
+    <CompositionServer />
     
   );
 }

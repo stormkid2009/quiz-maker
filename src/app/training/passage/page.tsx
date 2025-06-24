@@ -1,5 +1,5 @@
 import React from "react";
-import Passage from "@/components/server/question-pages/passage-server";
+import PassageServer from "@/components/server/question-pages/passage-server";
 
 export const metadata = {
   title: "Reading Comprehension",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function PassagePage() {
-  return <Passage />;
+  return <PassageServer />;
 }
