@@ -1,5 +1,5 @@
 import React from "react";
-import Grammaire from "@/components/server/question-pages/grammaire";
+import Grammaire from "@/components/server/question-pages/grammaire-server";
 
 export const metadata = {
   title: "Grammar Questions",

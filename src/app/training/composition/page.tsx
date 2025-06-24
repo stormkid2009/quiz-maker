@@ -1,6 +1,5 @@
 import React from "react";
-import Composition from "@/components/server-questions/composition";
-import CompositionPageWrapper from "@/components/wrappers/question-pages/composition-wrapper";
+import Composition from "@/components/server/question-pages/composition-server";
 
 export const metadata = {
   title: "Composition Questions",
@@ -9,11 +8,7 @@ export const metadata = {
 
 export default function CompositionPage() {
   return (
-    <CompositionPageWrapper
-      title="Composition Questions"
-      description="Open-ended writing prompts to test your writing skills. Express your thoughts in the text area provided."
-    >
-      <Composition />
-    </CompositionPageWrapper>
+    <Composition />
+    
   );
 }

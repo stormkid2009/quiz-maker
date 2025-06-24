@@ -1,24 +1,27 @@
 "use client";
 
-// client component wrapper for grammaire question in question pages
+// client component wrapper for passage question in question pages
 import React from "react";
 import Link from "next/link";
 import { useState } from "react";
 import QuestionActions from "@/components/buttons/question-actions";
+import BackToQuestions from "@/components/buttons/back-to-questions";
 
-interface GrammairePageWrapperProps {
+interface PassagePageWrapperProps {
   title: string;
   description: string;
   children: React.ReactNode;
-  rightAnswer: string;
+  firstAnswer: string;
+  secondAnswer: string;
 }
 
-export default function GrammairePageWrapper({
+export default function PassagePageWrapper({
   title,
   description,
   children,
-  rightAnswer,
-}: GrammairePageWrapperProps) {
+  firstAnswer,
+  secondAnswer,
+}: PassagePageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
   // Here we define the *actual* logic
@@ -27,24 +30,23 @@ export default function GrammairePageWrapper({
     setIsAnswerVisible(true);
   };
 
-  const loadNewGrammarQuestion = () => {
-    console.log("Fetching a new grammar question...");
+  const loadNewPassageQuestion = () => {
+    console.log("Fetching a new passage question...");
     // In a real app, you'd fetch data here and reset state
     window.location.reload(); // Or use the default behavior
   };
   return (
     <main className="container mx-auto py-8 px-4">
-      <div className="mb-6 flex items-center">
-        <Link href="/training" className="text-blue-600 hover:underline mr-4">
-          ← Back to All Questions
-        </Link>
-      </div>
-
+      <BackToQuestions />
       <h1 className="text-3xl font-bold mb-6">{title}</h1>
       <p className="text-gray-600 mb-8">{description}</p>
 
       <div className="bg-white p-6 rounded-lg shadow-sm">{children}</div>
-      {isAnswerVisible && <p>This is the hidden answer: {rightAnswer}</p>}
+      {isAnswerVisible && (
+        <p className="text-purple-600 p-2 bg-black">
+          This is the hidden answer: {firstAnswer} + {secondAnswer}
+        </p>
+      )}
 
       {/* 
   We pass our logic functions as props to QuestionActions.
@@ -52,7 +54,7 @@ export default function GrammairePageWrapper({
 */}
       <QuestionActions
         onShowAnswer={showTheAnswer}
-        onLoadNew={loadNewGrammarQuestion}
+        onLoadNew={loadNewPassageQuestion}
       />
     </main>
   );

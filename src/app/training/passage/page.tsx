@@ -1,6 +1,5 @@
 import React from "react";
-import Passage from "@/components/server-questions/passage";
-import PassagePageWrapper from "@/components/wrappers/question-pages/passage-wrapper";
+import Passage from "@/components/server/question-pages/passage-server";
 
 export const metadata = {
   title: "Reading Comprehension",
@@ -8,12 +7,5 @@ export const metadata = {
 };
 
 export default function PassagePage() {
-  return (
-    <PassagePageWrapper
-      title="Reading Comprehension"
-      description="These questions test your ability to understand and analyze written passages. Read the passage carefully and answer the related questions."
-    >
-      <Passage />
-    </PassagePageWrapper>
-  );
+  return <Passage />;
 }

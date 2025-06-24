@@ -1,6 +1,5 @@
 import React from "react";
-import Situation from "@/components/server-questions/situation";
-import SituationPageWrapper from "@/components/wrappers/question-pages/situation-wrapper";
+import Situation from "@/components/server/question-pages/situation-server";
 
 export const metadata = {
   title: "Situation Questions",
@@ -9,11 +8,6 @@ export const metadata = {
 
 export default function SituationPage() {
   return (
-    <SituationPageWrapper
-      title="Situation Questions"
-      description="These questions present real-world situations and require multiple selections. Select all that apply in each situation."
-    >
-      <Situation />
-    </SituationPageWrapper>
+    <Situation />
   );
 }
