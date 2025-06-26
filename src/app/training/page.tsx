@@ -1,9 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Grammaire from "@/components/server/training-home/grammaire";
-import Situation from "@/components/server/training-home/situation";
-import Composition from "@/components/server/training-home/composition";
-import Passage from "@/components/server/training-home/passage";
 
 export const metadata = {
   title: "Question Types",
@@ -29,11 +25,15 @@ export default function QuestionsPage() {
               href="/training/grammaire"
               className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
             >
-              Practice More
+              Jump to Training ***
             </Link>
           </div>
           <div className="p-4 bg-white">
-            <Grammaire />
+            <p>
+              {" "}
+              This kind of questions has multi choices and only one answer is
+              valid{" "}
+            </p>
           </div>
         </div>
 
@@ -44,11 +44,15 @@ export default function QuestionsPage() {
               href="/training/situation"
               className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
             >
-              Practice More
+              Jump to Training ***
             </Link>
           </div>
           <div className="p-4 bg-white">
-            <Situation />
+            <p>
+              {" "}
+              This kind of Questions has multi choices with two valid
+              answers{" "}
+            </p>
           </div>
         </div>
 
@@ -59,11 +63,15 @@ export default function QuestionsPage() {
               href="/training/composition"
               className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
             >
-              Practice More
+              Jump to Training ***
             </Link>
           </div>
           <div className="p-4 bg-white">
-            <Composition />
+            <p>
+              {" "}
+              This kind of questions is open end so the evaluation will be from
+              an expert{" "}
+            </p>
           </div>
         </div>
 
@@ -74,11 +82,15 @@ export default function QuestionsPage() {
               href="/training/passage"
               className="px-3 py-1 bg-amber-600 text-white text-sm rounded hover:bg-amber-700"
             >
-              Practice More
+              Jump to Training ***
             </Link>
           </div>
           <div className="p-4 bg-white">
-            <Passage />
+            <p>
+              {" "}
+              This kind of questions has one text for Comprehension and multi
+              sub questions with multi choice with one valid answer{" "}
+            </p>
           </div>
         </div>
       </div>
