@@ -14,6 +14,20 @@ enum LogLevel {
 
 /**
  * Interface representing an API error structure for Next.js App Router.
+ *
+ * @interface ApiError
+ * @property {string} path - The API endpoint path where the error occurred.
+ * @property {string} method - HTTP method used in the request.
+ * @property {number} statusCode - HTTP status code associated with the error.
+ * @property {string} errorName - Name of the error class/type.
+ * @property {string} errorMessage - Error message.
+ * @property {string} [stack] - Optional stack trace.
+ * @property {{
+ *   query?: Record<string,string>;
+ *   params?: Record<string,string>;
+ *   headers?: Record<string,string>;
+ *   body?: unknown;
+ * }} [requestData] - Optional request data for debugging.
  */
 interface ApiError {
   path: string;
@@ -31,7 +45,13 @@ interface ApiError {
 }
 
 /**
- * Interface representing a log entry.
+ * Interface representing a log entry stored in the log file.
+ *
+ * @interface LogEntry
+ * @property {string} timestamp - ISO timestamp of when the log was created.
+ * @property {LogLevel} level - Severity level of the log.
+ * @property {string} message - Log message content.
+ * @property {ApiError} [error] - Optional detailed API error information.
  */
 interface LogEntry {
   timestamp: string;
@@ -54,6 +74,9 @@ let writeQueue: Promise<void> = Promise.resolve();
 /**
  * Ensures that the log directory exists.
  * If the directory does not exist, it is created recursively.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when the directory exists or is created.
  */
 async function ensureLogDirectory() {
   try {
@@ -66,6 +89,9 @@ async function ensureLogDirectory() {
 /**
  * Rotates the log file if it exceeds the maximum allowed size.
  * The current log file is renamed with a timestamp appended to its filename.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves after rotation check and file rename if needed.
  */
 async function rotateLogFile() {
   const now = new Date();
@@ -137,51 +163,51 @@ function createLogEntry(
 }
 
 /**
- * Extract relevant information from a NextRequest object
- * 
- * @param request - The NextRequest object
- * @returns Object containing extracted request data
+ * Extracts relevant information from a NextRequest or Request object.
+ *
+ * @param {NextRequest | Request} request - The incoming request object.
+ * @returns {{ path: string; method: string; headers: Record<string, string>; query: Record<string, string> }} Object containing extracted request data.
  */
 function extractRequestData(request: NextRequest | Request) {
   try {
     const url = new URL(request.url);
     const method = request.method;
     const path = url.pathname;
-    
+
     // Extract headers (limited set for security/privacy)
     const headers: Record<string, string> = {};
     const importantHeaders = [
-      'content-type',
-      'user-agent',
-      'referer',
-      'x-request-id',
-      'x-correlation-id',
-      'x-forwarded-for'
+      "content-type",
+      "user-agent",
+      "referer",
+      "x-request-id",
+      "x-correlation-id",
+      "x-forwarded-for",
     ];
-    
+
     request.headers.forEach((value, key) => {
       if (importantHeaders.includes(key.toLowerCase())) {
         headers[key] = value;
       }
     });
-    
+
     // Extract search params
     const query: Record<string, string> = {};
     url.searchParams.forEach((value, key) => {
       query[key] = value;
     });
-    
+
     return {
       path,
       method,
       headers,
-      query
+      query,
     };
   } catch (error) {
     console.error("Failed to extract request data:", error);
     return {
       path: "unknown",
-      method: "unknown"
+      method: "unknown",
     };
   }
 }
@@ -190,9 +216,11 @@ function extractRequestData(request: NextRequest | Request) {
  * Logs an API error with context details to the log file.
  * Compatible with Next.js App Router and NextRequest/NextResponse.
  *
- * @param message - Custom message describing the error context.
- * @param error - The caught error from the API.
- * @param context - Additional context including request, statusCode, and optional params.
+ * @param {string} message - Custom message describing the error context.
+ * @param {Error} error - The caught error from the API.
+ * @param {object} context - Additional context including request, statusCode, and optional params.
+ * @async
+ * @returns {Promise<void>} Resolves when the error has been logged.
  */
 export async function logApiError(
   message: string,
@@ -208,23 +236,23 @@ export async function logApiError(
 ): Promise<void> {
   // Extract request data if request object is provided
   let requestData: any = {};
-  
+
   if (context.request) {
     const extractedData = extractRequestData(context.request);
     requestData = {
       query: extractedData.query,
-      headers: extractedData.headers
+      headers: extractedData.headers,
     };
-    
+
     // Use extracted path and method if not explicitly provided
     if (!context.path) context.path = extractedData.path;
     if (!context.method) context.method = extractedData.method;
   }
-  
+
   // Add params and body if provided
   if (context.params) requestData.params = context.params;
   if (context.requestBody) requestData.body = context.requestBody;
-  
+
   const logEntry = createLogEntry(LogLevel.ERROR, message, {
     path: context.path || "unknown",
     method: context.method || "unknown",
@@ -232,7 +260,7 @@ export async function logApiError(
     errorName: error.name,
     errorMessage: error.message,
     stack: error.stack,
-    requestData: Object.keys(requestData).length > 0 ? requestData : undefined
+    requestData: Object.keys(requestData).length > 0 ? requestData : undefined,
   });
 
   await safeAppendToLog(JSON.stringify(logEntry));
@@ -241,8 +269,10 @@ export async function logApiError(
 /**
  * Logs a general error to the log file without additional API context.
  *
- * @param message - Custom message describing the error context.
- * @param error - The error object to log.
+ * @param {string} message - Custom message describing the error context.
+ * @param {Error} error - The error object to log.
+ * @async
+ * @returns {Promise<void>} Resolves when the error has been logged.
  */
 export async function logError(message: string, error: Error): Promise<void> {
   const logEntry = createLogEntry(LogLevel.ERROR, message, {
@@ -259,8 +289,10 @@ export async function logError(message: string, error: Error): Promise<void> {
 
 /**
  * Logs an informational message to the log file.
- * 
- * @param message - The informational message to log.
+ *
+ * @param {string} message - The informational message to log.
+ * @async
+ * @returns {Promise<void>} Resolves when the info log entry is written.
  */
 export async function logInfo(message: string): Promise<void> {
   const logEntry = createLogEntry(LogLevel.INFO, message);
@@ -269,12 +301,14 @@ export async function logInfo(message: string): Promise<void> {
 
 /**
  * Logs a warning message to the log file.
- * 
- * @param message - The warning message to log.
- * @param details - Optional additional details.
+ *
+ * @param {string} message - The warning message to log.
+ * @param {Record<string, unknown>} [details] - Optional additional details.
+ * @async
+ * @returns {Promise<void>} Resolves when the warning log entry is written.
  */
 export async function logWarn(
-  message: string, 
+  message: string,
   details?: Record<string, unknown>
 ): Promise<void> {
   const logEntry = createLogEntry(LogLevel.WARN, message, details as any);
