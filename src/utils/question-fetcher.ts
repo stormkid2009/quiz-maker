@@ -1,10 +1,21 @@
 // question-fetcher.ts
+/**
+ * Supported quiz question types for API requests.
+ */
 export type QuestionType =
   | "grammaire"
   | "situation"
   | "passage"
   | "composition"; // Add more types as needed
 
+/**
+ * Options for configuring question fetch requests.
+ *
+ * @interface FetchOptions
+ * @property {RequestCache} [cache] - Cache strategy for fetch.
+ * @property {HeadersInit} [headers] - Additional HTTP headers.
+ * @property {number} [revalidate] - Revalidation time in seconds for ISR.
+ */
 interface FetchOptions {
   cache?: RequestCache;
   headers?: HeadersInit;
@@ -19,12 +30,12 @@ interface FetchOptions {
  */
 async function fetchQuestion(
   questionType: QuestionType,
-  options: FetchOptions = {},
+  options: FetchOptions = {}
 ) {
   // Skip API calls during build time
   if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
     console.log(
-      `Skipping ${questionType} fetch during build - no database available`,
+      `Skipping ${questionType} fetch during build - no database available`
     );
     return null;
   }
@@ -57,12 +68,12 @@ async function fetchQuestion(
 
     const response = await fetch(
       `${baseUrl}/api/v1/${questionType}`,
-      fetchOptions,
+      fetchOptions
     );
 
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch ${questionType} question: ${response.status} ${response.statusText}`,
+        `Failed to fetch ${questionType} question: ${response.status} ${response.statusText}`
       );
     }
 
@@ -113,7 +124,7 @@ export async function getDynamicQuestion(questionType: QuestionType) {
  */
 export async function getMultipleQuestions(
   questionType: QuestionType,
-  count: number = 5,
+  count: number = 5
 ) {
   try {
     const promises = Array(count)
@@ -128,7 +139,17 @@ export async function getMultipleQuestions(
   }
 }
 
-// Types for better TypeScript support
+/**
+ * Represents the data structure of a quiz question from the API.
+ *
+ * @interface QuestionData
+ * @property {string} id - Unique question identifier.
+ * @property {string} question - The question text.
+ * @property {string[]} options - Array of answer options.
+ * @property {string[]} rightAnswer - Array of correct answer key(s).
+ * @property {string} [explanation] - Optional explanation for the correct answer.
+ * @property {"easy"|"medium"|"hard"} [difficulty] - Optional difficulty level.
+ */
 export interface QuestionData {
   id: string;
   question: string;
@@ -138,7 +159,12 @@ export interface QuestionData {
   difficulty?: "easy" | "medium" | "hard";
 }
 
-// Helper function to validate question data structure
+/**
+ * Type guard to assert an object is valid QuestionData.
+ *
+ * @param {any} data - Data to validate.
+ * @returns {data is QuestionData} True if data matches QuestionData.
+ */
 export function isValidQuestionData(data: any): data is QuestionData {
   return (
     data &&
