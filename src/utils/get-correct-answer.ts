@@ -1,4 +1,9 @@
 // Helper function to get the correct answer from a question
+/**
+ * Mapping of answer letter keys to their corresponding option indices.
+ *
+ * @constant {Record<string, number>}
+ */
 const indexOfAnswer = {
   a: 0,
   b: 1,
@@ -8,7 +13,13 @@ const indexOfAnswer = {
 } as const;
 
 /**
- * Simplified interface for quiz questions supporting letter-based answers
+ * Represents a quiz question with options and one or more correct answers identified by letter keys.
+ *
+ * @interface QuizQuestion
+ * @property {string | number} [id] - Optional unique identifier for the question.
+ * @property {string[]} options - List of possible answer options.
+ * @property {string | string[]} [rightAnswer] - Letter key(s) representing the correct option(s).
+ * @property {string | string[]} [answer] - Alternative field for the correct answer key(s).
  */
 interface QuizQuestion {
   id?: string | number;
@@ -17,6 +28,12 @@ interface QuizQuestion {
   answer?: string | string[];
 }
 
+/**
+ * Retrieves the correct answer(s) for a given quiz question by mapping letter keys to option strings.
+ *
+ * @param {QuizQuestion} question - The quiz question object containing options and answer key(s).
+ * @returns {string[]} Array of correct answer strings corresponding to the provided answer key(s).
+ */
 export const getCorrectAnswer = (question: QuizQuestion): string[] => {
   // Try different possible property names for the correct answer
   const possibleAnswerProps: (keyof QuizQuestion)[] = ["rightAnswer", "answer"];
