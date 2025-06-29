@@ -1,12 +1,23 @@
 import React from "react";
 import Link from "next/link";
 
+/**
+ * Page metadata for the training question types page.
+ * @property {string} title - The page title.
+ * @property {string} description - The page description for SEO.
+ */
 export const metadata = {
   title: "Question Types",
   description:
     "Train yourself with exploring different types of questions in our quiz system",
 };
 
+/**
+ * Training QuestionsPage component lists available question types and navigation links.
+ *
+ * @component
+ * @returns {JSX.Element} The overview page of question types.
+ */
 export default function QuestionsPage() {
   return (
     <main className="container mx-auto py-8 px-4">
@@ -50,8 +61,7 @@ export default function QuestionsPage() {
           <div className="p-4 bg-white">
             <p>
               {" "}
-              This kind of Questions has multi choices with two valid
-              answers{" "}
+              This kind of Questions has multi choices with two valid answers{" "}
             </p>
           </div>
         </div>
