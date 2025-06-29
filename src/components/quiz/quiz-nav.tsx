@@ -2,6 +2,18 @@
 
 import React from "react";
 
+/**
+ * Props for the QuizNav component, handling quiz question navigation.
+ *
+ * @interface QuizNavProps
+ * @property {number} currentQuestion - Current question index (1-based).
+ * @property {number} totalQuestions - Total number of questions in the quiz.
+ * @property {() => void} onPrevious - Callback to navigate to the previous question.
+ * @property {() => void} onNext - Callback to navigate to the next question.
+ * @property {() => void} onSubmit - Callback to submit the quiz.
+ * @property {boolean} isFirstQuestion - Whether the current question is the first.
+ * @property {boolean} isLastQuestion - Whether the current question is the last.
+ */
 interface QuizNavProps {
   currentQuestion: number;
   totalQuestions: number;
@@ -12,6 +24,12 @@ interface QuizNavProps {
   isLastQuestion: boolean;
 }
 
+/**
+ * QuizNav component renders navigation buttons for quiz questions.
+ *
+ * @param {QuizNavProps} props - Configuration for quiz navigation controls.
+ * @returns {JSX.Element} The navigation UI for quiz.
+ */
 const QuizNav: React.FC<QuizNavProps> = ({
   currentQuestion,
   totalQuestions,
