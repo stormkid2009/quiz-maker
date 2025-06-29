@@ -11,24 +11,29 @@ import { getOneRandomDoc } from "@/utils/api-helper";
 import { logApiError, logInfo } from "@/utils/updated-logger";
 import { Messages } from "@/types/common";
 
+/**
+ * Messages used for API responses and error logging
+ */
 const msg: Messages = {
-  success: "successfully retrieve random question",
-  failure: "failed to retrieve random question",
-  wrongMethod: "the method is not valid",
-  invalidData: "the data is not valid",
-  dbIssues: "something went wrong connecting to DB",
+  success: "Successfully retrieved random question",
+  failure: "Failed to retrieve random question",
+  wrongMethod: "The HTTP method is not valid",
+  invalidData: "The request data is not valid",
+  dbIssues: "Something went wrong connecting to the database",
 } as const;
 
 /**
- * Creates a standardized error response
- * @param message Error message
- * @param details Optional error details
- * @param status HTTP status code (defaults to 500)
+ * Creates a standardized error response for API errors
+ *
+ * @param {string} message - Human-readable error message
+ * @param {any} [details=null] - Optional additional error details
+ * @param {number} [status=500] - HTTP status code (defaults to 500)
+ * @returns {NextResponse} A NextResponse object with error details
  */
 function createErrorResponse(
   message: string,
   details: any = null,
-  status: number = 500,
+  status: number = 500
 ) {
   return NextResponse.json(
     {
@@ -36,13 +41,53 @@ function createErrorResponse(
       message,
       details,
     },
-    { status },
+    { status }
   );
 }
 
 /**
- * GET route handler for quiz API
- * Fetches random questions from different collections and assembles a quiz
+ * GET endpoint for quiz generation
+ *
+ * Fetches random questions from different collections and assembles them into a quiz.
+ * The quiz includes questions from multiple categories including grammar, reading comprehension,
+ * and situation-based questions.
+ *
+ * @param {Request} request - The incoming HTTP request
+ * @returns {Promise<NextResponse>} Returns a JSON response containing:
+ * - On success: A quiz object with randomized questions from different categories
+ * - On error: An error object with status code and message
+ *
+ * @throws {Error} Logs any unhandled errors to the error logging system
+ *
+ * @example
+ * // Successful response
+ * GET /api/v1/quiz
+ *
+ * // Response
+ * {
+ *   "questions": [
+ *     {
+ *       "id": 1,
+ *       "type": "MCQ",
+ *       "question": "Sample grammar question...",
+ *       "options": [...],
+ *       "correctAnswer": "..."
+ *     },
+ *     {
+ *       "id": 2,
+ *       "type": "RC",
+ *       "passage": "Reading passage text...",
+ *       "relatedQuestions": [...]
+ *     },
+ *     {
+ *       "id": 3,
+ *       "type": "Multi-MCQ",
+ *       "question": "Situation-based question...",
+ *       "options": [...],
+ *       "correctAnswers": [...]
+ *     }
+ *   ]
+ * }
  */
 export async function GET(request: Request) {
   await logInfo("Quiz API was called");
@@ -66,7 +111,7 @@ export async function GET(request: Request) {
     try {
       const grammaire = await getOneRandomDoc(
         prisma.grammaire,
-        MCQQuestionSchema,
+        MCQQuestionSchema
       );
       if (grammaire) {
         // Ensure type is literal value
@@ -114,7 +159,7 @@ export async function GET(request: Request) {
     try {
       const passage = await getOneRandomDoc(
         prisma.passage,
-        ReadingComprehensionQuestionSchema,
+        ReadingComprehensionQuestionSchema
       );
       if (passage) {
         // Ensure type is literal value
@@ -141,7 +186,7 @@ export async function GET(request: Request) {
     try {
       const situation = await getOneRandomDoc(
         prisma.situation,
-        MultiMCQQuestionSchema,
+        MultiMCQQuestionSchema
       );
       if (situation) {
         // Ensure type is literal value
@@ -168,7 +213,7 @@ export async function GET(request: Request) {
         {
           request,
           statusCode: 404,
-        },
+        }
       );
       return createErrorResponse("No valid questions found", null, 404);
     }
