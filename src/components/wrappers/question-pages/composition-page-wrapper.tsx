@@ -7,6 +7,13 @@ import { useState } from "react";
 import QuestionActions from "@/components/buttons/question-actions";
 import BackToQuestions from "@/components/buttons/back-to-questions";
 
+/**
+ * Props for the CompositionPageWrapper component.
+ * @property {string} title - Title of the composition question page.
+ * @property {string} description - Description or prompt for the composition.
+ * @property {React.ReactNode} children - JSX content for rendering the composition question.
+ * @property {string} answer - The correct answer to reveal.
+ */
 interface CompositionPageWrapperProps {
   title: string;
   description: string;
@@ -14,6 +21,13 @@ interface CompositionPageWrapperProps {
   answer: string;
 }
 
+/**
+ * React client component wrapper for composition question pages.
+ * Renders title, description, question content, answer reveal, and navigation actions.
+ *
+ * @param {CompositionPageWrapperProps} props - Component properties.
+ * @returns {JSX.Element} The rendered page layout.
+ */
 export default function CompositionPageWrapper({
   title,
   description,
@@ -22,16 +36,21 @@ export default function CompositionPageWrapper({
 }: CompositionPageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-  // Here we define the *actual* logic
+  /**
+   * Reveal the correct answer by setting visibility flag.
+   */
   const showTheAnswer = () => {
     console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
+  /**
+   * Load a new composition question, resetting state or reloading the page.
+   */
   const loadNewCompositionQuestion = () => {
     console.log("Fetching a new composition question...");
     // In a real app, you'd fetch data here and reset state
-    window.location.reload(); // Or use the default behavior
+    window.location.reload();
   };
   return (
     <main className="container mx-auto py-8 px-4">
