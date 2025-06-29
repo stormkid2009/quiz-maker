@@ -6,6 +6,32 @@ import { useQuestionNavigation } from "@/hooks/use-question-navigation";
 import { useQuizAnswers } from "@/hooks/use-quiz-answers";
 import { useQuizSubmission } from "@/hooks/use-quiz-submission";
 
+/**
+ * State object returned by the useQuizContainer hook.
+ * @property {Quiz | null} quiz - Loaded quiz data.
+ * @property {boolean} loading - Loading status of quiz data.
+ * @property {string | null} error - Error message if loading failed.
+ * @property {number} totalQuestions - Total count of questions in the quiz.
+ * @property {Record<string, any>} answers - Map of question IDs to current answers.
+ * @property {Record<string, true|false>} questionStatus - Completion status for each question.
+ * @property {number} completedCount - Number of questions answered so far.
+ * @property {number} currentQuestionIndex - Index of the current question.
+ * @property {any} currentQuestion - The current question object.
+ * @property {boolean} isFirstQuestion - True if on the first question.
+ * @property {boolean} isLastQuestion - True if on the last question.
+ * @property {boolean} submitted - True if the quiz has been submitted.
+ * @property {number | null} score - Final score after submission.
+ * @property {boolean} canSubmit - True if submission is allowed.
+ * @property {boolean} isComplete - True if quiz is complete or submitted.
+ * @property {(questionId: string, answer: any) => void} handleAnswerChange - Update handler for answers.
+ * @property {() => void} handlePrevious - Navigate to the previous question.
+ * @property {() => void} handleNext - Navigate to the next question.
+ * @property {() => void} handleSubmit - Submit the quiz.
+ * @property {() => void} refetch - Refetch quiz data.
+ * @property {() => void} resetQuiz - Reset or reload the quiz.
+ * @property {number} progressPercentage - Percentage of progress completed.
+ * @property {number} [timeSpent] - Time spent on the quiz if tracking enabled.
+ */
 export interface QuizContainerState {
   // Quiz data
   quiz: Quiz | null;
@@ -43,6 +69,14 @@ export interface QuizContainerState {
   timeSpent?: number;
 }
 
+/**
+ * Options for the useQuizContainer hook.
+ * @property {boolean} [autoSave=true] - Automatically save progress when answers change.
+ * @property {boolean} [persistProgress=true] - Persist progress to storage.
+ * @property {boolean} [trackTime=false] - Track time spent on the quiz.
+ * @property {(results: { score: number; answers: Record<string, any> }) => void} [onComplete] - Callback when quiz completes successfully.
+ * @property {(error: string) => void} [onError] - Callback when an error occurs.
+ */
 export interface UseQuizContainerOptions {
   autoSave?: boolean;
   persistProgress?: boolean;
@@ -54,8 +88,15 @@ export interface UseQuizContainerOptions {
   onError?: (error: string) => void;
 }
 
+/**
+ * React hook that manages quiz data fetching, navigation, answers, scoring,
+ * submission, time tracking, and persistence.
+ *
+ * @param {UseQuizContainerOptions} [options={}] - Configuration options for quiz behavior.
+ * @returns {QuizContainerState} The current quiz state and action handlers.
+ */
 export const useQuizContainer = (
-  options: UseQuizContainerOptions = {},
+  options: UseQuizContainerOptions = {}
 ): QuizContainerState => {
   const {
     autoSave = true,
@@ -127,7 +168,7 @@ export const useQuizContainer = (
         console.log("Auto-saving progress...", { questionId, answer });
       }
     },
-    [baseHandleAnswerChange, autoSave],
+    [baseHandleAnswerChange, autoSave]
   );
 
   const handleSubmit = useCallback(() => {
