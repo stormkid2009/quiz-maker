@@ -11,6 +11,17 @@ import { useQuestionNavigation } from "@/hooks/use-question-navigation";
 import { useQuizAnswers } from "@/hooks/use-quiz-answers";
 import { useQuizSubmission } from "@/hooks/use-quiz-submission";
 
+/**
+ * QuizContainer component orchestrates the full quiz experience:
+ * - Fetches quiz data
+ * - Manages user answers
+ * - Calculates scoring
+ * - Handles question navigation
+ * - Submits quiz results
+ *
+ * @component
+ * @returns {JSX.Element} The quiz interface including progress bar, current question, and navigation controls.
+ */
 const QuizContainer: React.FC = () => {
   const { quiz, loading, error, refetch, totalQuestions } = useQuizData();
 
