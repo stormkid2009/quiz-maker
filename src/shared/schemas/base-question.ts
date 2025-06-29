@@ -1,32 +1,50 @@
+/**
+ * Shared Zod schemas and TypeScript types for base question structure.
+ * Includes definitions for question types and base question validation.
+ */
 import { z } from "zod";
 
-// Define question types as a Zod enum
+/**
+ * Zod enum schema for supported question types.
+ * @constant {import("zod").ZodEnum}
+ */
 export const QuestionTypesSchema = z.enum([
-  "MCQ", 
-  "Multi-MCQ", 
-  "Open-Ended", 
-  "RC"
+  "MCQ",
+  "Multi-MCQ",
+  "Open-Ended",
+  "RC",
 ]);
 
+/**
+ * TypeScript type for valid question types inferred from QuestionTypesSchema.
+ */
 export type QuestionType = z.infer<typeof QuestionTypesSchema>;
 
+/**
+ * Constant object mapping question type keys to literal values.
+ * Ensures consistent usage of question type strings across the codebase.
+ */
 export const QuestionTypes = {
   MCQ: "MCQ",
   MULTI_MCQ: "Multi-MCQ",
   OPEN_ENDED: "Open-Ended",
-  RC: "RC"
+  RC: "RC",
 } as const;
 
-// Base question schema
+/**
+ * Zod object schema for the base question fields.
+ * @constant {import("zod").ZodObject}
+ */
 export const BaseQuestionSchema = z.object({
   id: z.string(),
   content: z.string(),
   type: QuestionTypesSchema,
   createdAt: z.date(),
-  updatedAt: z.date(), 
+  updatedAt: z.date(),
 });
 
-// Infer type for base question
-// This is the base schema for all questions
+/**
+ * TypeScript type inferred from BaseQuestionSchema.
+ * Represents the minimal set of fields for any quiz question.
+ */
 export type BaseQuestion = z.infer<typeof BaseQuestionSchema>;
-
