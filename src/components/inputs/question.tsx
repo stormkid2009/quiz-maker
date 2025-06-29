@@ -7,16 +7,36 @@ import { MCQQuestion } from "@/shared/schemas/mcq";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 
+/**
+ * Props for the Question component, representing the question data and answer callback.
+ *
+ * @interface QuestionProps
+ * @property {QuestionType} question - The question object (MCQ, multi-MCQ, or RC).
+ * @property {(questionId: string, answers: string[]) => void} onAnswerChange - Callback invoked when answers change.
+ */
 interface QuestionProps {
   question: QuestionType;
   onAnswerChange: (questionId: string, answers: string[]) => void;
 }
 
+/**
+ * Question component renders various question types and handles answer updates.
+ *
+ * @param {QuestionProps} props - Props including question data and answer change handler.
+ * @returns {JSX.Element} The rendered question input UI.
+ */
 const Question: React.FC<QuestionProps> = ({ question, onAnswerChange }) => {
   const [selectedAnswers, setSelectedAnswers] = React.useState<
     Record<string, string[]>
   >({});
 
+  /**
+   * Handles toggling a single-choice option for MCQ questions.
+   *
+   * @param {boolean} checked - Whether the option is selected.
+   * @param {number} index - Index of the option in the options array.
+   * @returns {void}
+   */
   const handleMCQAnswerToggle = React.useCallback(
     (checked: boolean, index: number) => {
       const mcqQuestion = question as MCQQuestion;
@@ -29,6 +49,13 @@ const Question: React.FC<QuestionProps> = ({ question, onAnswerChange }) => {
     [question, selectedAnswers, onAnswerChange]
   );
 
+  /**
+   * Handles toggling options for multiple-select MCQ questions.
+   *
+   * @param {boolean} checked - Whether the option is selected.
+   * @param {number} index - Index of the option in the options array.
+   * @returns {void}
+   */
   const handleMultiMCQAnswerToggle = React.useCallback(
     (checked: boolean, index: number) => {
       const multiMcqQuestion = question as { id: string; options: string[] };
@@ -53,6 +80,14 @@ const Question: React.FC<QuestionProps> = ({ question, onAnswerChange }) => {
     [question, selectedAnswers, onAnswerChange]
   );
 
+  /**
+   * Handles answer changes for reading comprehension questions.
+   *
+   * @param {boolean} checked - Whether the option is selected.
+   * @param {string} option - The selected option.
+   * @param {number} subQuestionIndex - Index of the sub-question.
+   * @returns {void}
+   */
   const handleRCAnswerToggle = React.useCallback(
     (checked: boolean, option: string, subQuestionIndex: number) => {
       const rcQuestion = question as ReadingComprehensionQuestion;
