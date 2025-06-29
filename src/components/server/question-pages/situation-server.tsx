@@ -6,8 +6,13 @@ export const metadata = {
   title: "Situation Question",
   description: "Practice situation with multiple-choice questions",
 };
-// we can create helper function to consume for all componennts
-// or we can use custom hook like useQuestionData
+
+/**
+ * Fetches a situation question from the backend API.
+ *
+ * @async
+ * @returns {Promise<any | null>} The fetched question data or null if an error occurs.
+ */
 async function getSituationQuestion() {
   try {
     const response = await fetch(
@@ -32,6 +37,14 @@ async function getSituationQuestion() {
     return null;
   }
 }
+
+/**
+ * Next.js server component that renders a situation question page.
+ * Fetches question data and displays it within a wrapper or shows a fallback.
+ *
+ * @async
+ * @returns {Promise<JSX.Element>} The rendered SituationPageWrapper or a fallback message.
+ */
 export default async function SituationServer() {
   const question = await getSituationQuestion();
 
