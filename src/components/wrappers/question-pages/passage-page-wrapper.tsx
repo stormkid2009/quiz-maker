@@ -7,6 +7,14 @@ import { useState } from "react";
 import QuestionActions from "@/components/buttons/question-actions";
 import BackToQuestions from "@/components/buttons/back-to-questions";
 
+/**
+ * Props for the PassagePageWrapper component.
+ * @property {string} title - Title of the passage question page.
+ * @property {string} description - Description or prompt for the passage.
+ * @property {React.ReactNode} children - JSX content for rendering the passage question.
+ * @property {string} firstAnswer - The first correct answer to reveal.
+ * @property {string} secondAnswer - The second correct answer to reveal.
+ */
 interface PassagePageWrapperProps {
   title: string;
   description: string;
@@ -15,6 +23,13 @@ interface PassagePageWrapperProps {
   secondAnswer: string;
 }
 
+/**
+ * React client component wrapper for passage question pages.
+ * Renders title, description, passage content, answer reveal, and navigation actions.
+ *
+ * @param {PassagePageWrapperProps} props - Component properties.
+ * @returns {JSX.Element} The rendered page layout.
+ */
 export default function PassagePageWrapper({
   title,
   description,
@@ -24,12 +39,17 @@ export default function PassagePageWrapper({
 }: PassagePageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-  // Here we define the *actual* logic
+  /**
+   * Reveal the correct answer by setting visibility flag.
+   */
   const showTheAnswer = () => {
     console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
+  /**
+   * Load a new passage question, resetting state or reloading.
+   */
   const loadNewPassageQuestion = () => {
     console.log("Fetching a new passage question...");
     // In a real app, you'd fetch data here and reset state
