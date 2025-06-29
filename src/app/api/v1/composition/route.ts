@@ -1,23 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
-import { getOneRandomDoc } from "@/utils/api-helper"; // Shared utility (see step 4)
+import { getOneRandomDoc } from "@/utils/api-helper";
 import { testDatabaseConnection } from "@/utils/database";
 import { logApiError } from "@/utils/updated-logger";
 import { Messages } from "@/types/common";
 
-
+/**
+ * Messages used for API responses and error logging
+ */
 const msg: Messages = {
-  success: "Successfully retrieve random composition question  ",
+  success: "Successfully retrieved random composition question",
   failure: "Failed to retrieve random composition question",
   wrongMethod: "Requested method is not valid",
-  invalidData: "Requested  data is not valid",
-  dbIssues: "something went wrong when connecting to DB",
+  invalidData: "Requested data is not valid",
+  dbIssues: "Something went wrong when connecting to the database",
 } as const;
 
+/**
+ * GET endpoint to retrieve a random composition (open-ended) question
+ *
+ * @param {NextRequest} req - The incoming request object
+ * @returns {Promise<NextResponse>} Returns a JSON response with either:
+ * - A random composition question on success (200)
+ * - An error message with appropriate status code on failure
+ *
+ * @throws {Error} Logs any unhandled errors to the error logging system
+ *
+ * @example
+ * // Successful response
+ * GET /api/v1/composition
+ *
+ * // Response
+ * {
+ *   "id": 1,
+ *   "question": "Write a short essay about your favorite book.",
+ *   "maxLength": 500,
+ *   "minLength": 100
+ * }
+ */
 export async function GET(req: NextRequest) {
+  console.log("👋 API Composition Question is called");
 
-  console.log("👋 API Open-ended Question is called");
   try {
     if (req.method !== "GET") {
       await logApiError(
@@ -26,32 +50,26 @@ export async function GET(req: NextRequest) {
         {
           method: req.method,
           path: req.nextUrl.pathname,
-          statusCode: 405
+          statusCode: 405,
         }
       );
-      return NextResponse.json(
-        { error: msg.wrongMethod },
-        { status: 405 }
-      );
+      return NextResponse.json({ error: msg.wrongMethod }, { status: 405 });
     }
+
     const connectedToDB = await testDatabaseConnection();
     if (!connectedToDB) {
-      //console.log(`Unable to connect to DB !`);
-
       await logApiError(
-        "Failed to connect to DB",
+        "Failed to connect to database",
         new Error(msg.dbIssues),
         {
           statusCode: 500,
           path: req.nextUrl.pathname,
-          method: req.method
+          method: req.method,
         }
       );
-      return NextResponse.json(
-        { error: msg.dbIssues },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: msg.dbIssues }, { status: 500 });
     }
+
     const question = await getOneRandomDoc(
       prisma.composition,
       OpenEndedQuestionSchema
@@ -59,10 +77,12 @@ export async function GET(req: NextRequest) {
 
     if (!question) {
       await logApiError(
-        "Failed to retrieve data from the server",
+        "No composition questions found in database",
         new Error(msg.failure),
         {
-          statusCode: 404
+          statusCode: 404,
+          path: req.nextUrl.pathname,
+          method: req.method,
         }
       );
       return NextResponse.json(
@@ -73,15 +93,16 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(question);
   } catch (error) {
-    await logApiError(
-      "Unkown issues happened ",
-      new Error(msg.invalidData),
-      {
-        statusCode: 500
-      }
-    );
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+
+    await logApiError("Error in composition question API", errorObj, {
+      statusCode: 500,
+      path: req.nextUrl.pathname,
+      method: req.method,
+    });
+
     return NextResponse.json(
-      { error: "Failed to fetch Composition question" },
+      { error: "Failed to fetch composition question" },
       { status: 500 }
     );
   }
