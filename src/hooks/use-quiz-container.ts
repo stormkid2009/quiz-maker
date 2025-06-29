@@ -15,7 +15,7 @@ export interface QuizContainerState {
 
   // Answers and progress
   answers: Record<string, any>;
-  questionStatus: Record<string, "answered" | "unanswered">;
+  questionStatus: Record<string, true | false>;
   completedCount: number;
 
   // Navigation
@@ -183,10 +183,7 @@ export const useQuizContainer = (
 
     // Save to localStorage or your persistence layer
     try {
-      localStorage.setItem(
-        `quiz-progress-${quiz.id}`,
-        JSON.stringify(progressData),
-      );
+      localStorage.setItem(`quiz-progress`, JSON.stringify(progressData));
     } catch (error) {
       console.warn("Failed to persist quiz progress:", error);
     }

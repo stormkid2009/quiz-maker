@@ -8,6 +8,7 @@ export type QuestionType =
 interface FetchOptions {
   cache?: RequestCache;
   headers?: HeadersInit;
+  revalidate?: number; // Add revalidate option
 }
 
 /**
@@ -20,6 +21,14 @@ async function fetchQuestion(
   questionType: QuestionType,
   options: FetchOptions = {},
 ) {
+  // Skip API calls during build time
+  if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+    console.log(
+      `Skipping ${questionType} fetch during build - no database available`,
+    );
+    return null;
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   if (!baseUrl) {
@@ -28,15 +37,28 @@ async function fetchQuestion(
   }
 
   try {
-    const response = await fetch(`${baseUrl}/api/v1/${questionType}`, {
+    const fetchOptions: any = {
       method: "GET",
-      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      ...options,
-    });
+    };
+
+    // Add cache options if specified
+    if (options.cache) {
+      fetchOptions.cache = options.cache;
+    }
+
+    // Add revalidate for ISR if specified
+    if (options.revalidate !== undefined) {
+      fetchOptions.next = { revalidate: options.revalidate };
+    }
+
+    const response = await fetch(
+      `${baseUrl}/api/v1/${questionType}`,
+      fetchOptions,
+    );
 
     if (!response.ok) {
       throw new Error(
@@ -51,12 +73,37 @@ async function fetchQuestion(
     return null;
   }
 }
+
 /**
  * Generic function to fetch any question type
  * @param questionType - The type of question to fetch
  */
 export async function getQuestion(questionType: QuestionType) {
   return fetchQuestion(questionType);
+}
+
+/**
+ * Fetch questions with static generation (for build time)
+ * @param questionType - The type of question to fetch
+ */
+export async function getStaticQuestion(questionType: QuestionType) {
+  return fetchQuestion(questionType, { cache: "force-cache" });
+}
+
+/**
+ * Fetch questions with ISR (revalidate every hour)
+ * @param questionType - The type of question to fetch
+ */
+export async function getRevalidatedQuestion(questionType: QuestionType) {
+  return fetchQuestion(questionType, { revalidate: 3600 }); // 1 hour
+}
+
+/**
+ * Fetch questions with no caching (dynamic)
+ * @param questionType - The type of question to fetch
+ */
+export async function getDynamicQuestion(questionType: QuestionType) {
+  return fetchQuestion(questionType, { cache: "no-store" });
 }
 
 /**
