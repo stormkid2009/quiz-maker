@@ -7,11 +7,22 @@ import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 import getCorrectAnswer from "@/utils/get-correct-answer";
 
+/**
+ * Props for the useQuizScoring hook.
+ * @property {QuizType | null} quiz - The quiz data to score.
+ * @property {Record<string, string[]>} answers - Map of question or sub-question IDs to selected answer indices.
+ */
 interface UseQuizScoringProps {
   quiz: QuizType | null;
   answers: Record<string, string[]>;
 }
 
+/**
+ * React hook to calculate the score of a quiz based on provided answers.
+ *
+ * @param {UseQuizScoringProps} props - The quiz object and user answers.
+ * @returns {{ calculateScore: () => number }} An object containing the score calculation function.
+ */
 export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
   const isMCQ = (q: QuestionType): q is MCQQuestion =>
     q.type === QuestionTypes.MCQ;
@@ -34,6 +45,11 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
     return result;
   };
 
+  /**
+   * Compute the quiz score as a percentage of correctly answered questions.
+   * Includes support for MCQ, Multi-MCQ, and RC sub-questions.
+   * @returns {number} The calculated score percentage (0-100).
+   */
   const calculateScore = useCallback(() => {
     if (!quiz) return 0;
 
