@@ -7,6 +7,13 @@ import { useState } from "react";
 import QuestionActions from "@/components/buttons/question-actions";
 import BackToQuestions from "@/components/buttons/back-to-questions";
 
+/**
+ * Props for the GrammairePageWrapper component.
+ * @property {string} title - Title of the grammar question page.
+ * @property {string} description - Description or prompt for the grammar question.
+ * @property {React.ReactNode} children - JSX content for rendering the grammar question.
+ * @property {string} rightAnswer - The correct answer to reveal.
+ */
 interface GrammairePageWrapperProps {
   title: string;
   description: string;
@@ -14,6 +21,13 @@ interface GrammairePageWrapperProps {
   rightAnswer: string;
 }
 
+/**
+ * React client component wrapper for grammar question pages.
+ * Renders title, description, question content, answer reveal, and navigation actions.
+ *
+ * @param {GrammairePageWrapperProps} props - Component properties.
+ * @returns {JSX.Element} The rendered page layout.
+ */
 export default function GrammairePageWrapper({
   title,
   description,
@@ -22,12 +36,17 @@ export default function GrammairePageWrapper({
 }: GrammairePageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-  // Here we define the *actual* logic
+  /**
+   * Reveal the correct answer by setting visibility flag.
+   */
   const showTheAnswer = () => {
     console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
+  /**
+   * Load a new grammar question, resetting state or reloading.
+   */
   const loadNewGrammarQuestion = () => {
     console.log("Fetching a new grammar question...");
     // In a real app, you'd fetch data here and reset state
@@ -35,7 +54,7 @@ export default function GrammairePageWrapper({
   };
   return (
     <main className="container mx-auto py-8 px-4">
-<BackToQuestions />
+      <BackToQuestions />
       <h1 className="text-3xl font-bold mb-6">{title}</h1>
       <p className="text-gray-600 mb-8">{description}</p>
 
