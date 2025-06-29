@@ -1,6 +1,12 @@
 import React from "react";
 import Link from "next/link";
 
+/**
+ * Home page component for the Quiz Maker application.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered home page with title, features, and navigation.
+ */
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-b from-blue-50 to-white">
