@@ -4,10 +4,21 @@ import { Question as QuestionType } from "@/shared/schemas/question";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 
+/**
+ * Props for the useQuizAnswers hook.
+ * @property {QuizType | null} quiz - The quiz object containing questions and answers.
+ */
 interface UseQuizAnswersProps {
   quiz: QuizType | null;
 }
 
+/**
+ * Return value of the useQuizAnswers hook.
+ * @property {Record<string, string[]>} answers - Map of question IDs to selected answers.
+ * @property {Record<string, boolean>} questionStatus - Map of question IDs to completion status.
+ * @property {number} completedCount - Number of completed questions.
+ * @property {(questionId: string, selectedAnswers: string[]) => void} handleAnswerChange - Function to update answers for a question.
+ */
 interface UseQuizAnswersReturn {
   answers: Record<string, string[]>;
   questionStatus: Record<string, boolean>;
@@ -15,6 +26,12 @@ interface UseQuizAnswersReturn {
   handleAnswerChange: (questionId: string, selectedAnswers: string[]) => void;
 }
 
+/**
+ * React hook to manage quiz answers and their status.
+ *
+ * @param {UseQuizAnswersProps} props - The quiz data.
+ * @returns {UseQuizAnswersReturn} The current answers, status, completed count, and answer changer.
+ */
 export const useQuizAnswers = ({
   quiz,
 }: UseQuizAnswersProps): UseQuizAnswersReturn => {
