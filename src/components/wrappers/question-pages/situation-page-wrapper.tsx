@@ -7,6 +7,14 @@ import { useState } from "react";
 import QuestionActions from "@/components/buttons/question-actions";
 import BackToQuestions from "@/components/buttons/back-to-questions";
 
+/**
+ * Props for the SituationPageWrapper component.
+ * @property {string} title - Title of the situation question page.
+ * @property {string} description - Description or prompt for the situation.
+ * @property {React.ReactNode} children - JSX content for rendering the question.
+ * @property {string} firstAnswer - The first correct answer to reveal.
+ * @property {string} secondAnswer - The second correct answer to reveal.
+ */
 interface SituationPageWrapperProps {
   title: string;
   description: string;
@@ -15,6 +23,13 @@ interface SituationPageWrapperProps {
   secondAnswer: string;
 }
 
+/**
+ * React client component wrapper for situation question pages.
+ * Renders title, description, question content, answer reveal, and navigation actions.
+ *
+ * @param {SituationPageWrapperProps} props - Component properties.
+ * @returns {JSX.Element} The rendered page layout.
+ */
 export default function SituationPageWrapper({
   title,
   description,
@@ -24,12 +39,17 @@ export default function SituationPageWrapper({
 }: SituationPageWrapperProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-  // Here we define the *actual* logic
+  /**
+   * Reveal the correct answer by setting visibility flag.
+   */
   const showTheAnswer = () => {
     console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
+  /**
+   * Load a new situation question, resetting state or reloading.
+   */
   const loadNewSituationQuestion = () => {
     console.log("Fetching a new situation question...");
     // In a real app, you'd fetch data here and reset state
