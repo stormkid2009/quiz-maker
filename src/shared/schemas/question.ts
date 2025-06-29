@@ -1,19 +1,33 @@
-import {z} from "zod";
-import {MCQQuestionSchema} from "@/shared/schemas/mcq";
-import {MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
-import {OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
-import {ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
+/**
+ * Zod schema and TypeScript union for all quiz question variants.
+ * Combines MCQ, Multi-MCQ, Open-Ended, and Reading Comprehension schemas.
+ *
+ * @file src/shared/schemas/question.ts
+ */
 
+import { z } from "zod";
+import { MCQQuestionSchema } from "@/shared/schemas/mcq";
+import { MultiMCQQuestionSchema } from "@/shared/schemas/multi-mcq";
+import { OpenEndedQuestionSchema } from "@/shared/schemas/open-ended";
+import { ReadingComprehensionQuestionSchema } from "@/shared/schemas/rc";
 
 // Create a union type of all questions using discriminated union
 
-export const QuestionSchema = z.discriminatedUnion("type",[
+/**
+ * Zod schema for all quiz question variants.
+ * Combines MCQ, Multi-MCQ, Open-Ended, and Reading Comprehension schemas.
+ *
+ * @constant {import("zod").ZodDiscriminatedUnion}
+ */
+export const QuestionSchema = z.discriminatedUnion("type", [
   MCQQuestionSchema,
   MultiMCQQuestionSchema,
   OpenEndedQuestionSchema,
   ReadingComprehensionQuestionSchema,
 ]);
 
-// infer type for general purpose question 
+/**
+ * TypeScript type inferred from QuestionSchema.
+ * Represents any quiz question variant.
+ */
 export type Question = z.infer<typeof QuestionSchema>;
-
