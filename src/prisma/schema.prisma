@@ -1,14 +1,17 @@
-// src/prisma/schema.prisma
+
+/// Prisma Client generator for database operations.
 generator client {
   provider = "prisma-client-js"
   output   = "../../node_modules/.prisma/client"
 }
 
+/// MongoDB datasource configuration (env: DATABASE_URL).
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+/// Embedded type representing questions related to a passage.
 type PassageRelatedQuestion {
   content     String
   options     String[]
@@ -16,6 +19,7 @@ type PassageRelatedQuestion {
   type        String
 }
 
+/// Model representing composition questions for writing exercises.
 model Composition {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   answer    String
@@ -28,6 +32,7 @@ model Composition {
   @@map("compositions")
 }
 
+/// Model representing grammar questions.
 model Grammaire {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   content     String
@@ -40,6 +45,7 @@ model Grammaire {
   @@map("grammaires")
 }
 
+/// Model representing reading passages with nested related questions.
 model Passage {
   id               String                  @id @default(auto()) @map("_id") @db.ObjectId
   createdAt        DateTime                @db.Date
@@ -51,6 +57,7 @@ model Passage {
   @@map("passages")
 }
 
+/// Model representing situation-based multiple choice questions.
 model Situation {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   content      String
@@ -63,6 +70,7 @@ model Situation {
   @@map("situations")
 }
 
+/// Model representing application user accounts.
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @db.Date
