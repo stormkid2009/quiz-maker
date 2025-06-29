@@ -5,6 +5,14 @@ import { Quiz as QuizType } from "@/shared/schemas/quiz";
 import { QuestionTypes } from "@/shared/schemas/base-question";
 import { ReadingComprehensionQuestion } from "@/shared/schemas/rc";
 
+/**
+ * Return value of the useQuizData hook.
+ * @property {QuizType | null} quiz - Loaded quiz data or null if not yet fetched.
+ * @property {boolean} loading - True if data is currently loading.
+ * @property {string | null} error - Error message if fetching fails.
+ * @property {() => void} refetch - Function to re-trigger the quiz fetch.
+ * @property {number} totalQuestions - Number of questions including RC sub-questions.
+ */
 interface UseQuizDataReturn {
   quiz: QuizType | null;
   loading: boolean;
@@ -13,12 +21,22 @@ interface UseQuizDataReturn {
   totalQuestions: number;
 }
 
+/**
+ * React hook to fetch quiz data and manage loading, error, and question count.
+ *
+ * @returns {UseQuizDataReturn} The quiz data state and control functions.
+ */
 export const useQuizData = (): UseQuizDataReturn => {
   const [quiz, setQuiz] = useState<QuizType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
 
+  /**
+   * Calculate the total number of questions, including RC sub-questions.
+   * @param {QuizType} quizData - The quiz object containing questions.
+   * @returns {number} Total effective question count.
+   */
   // Calculate effective question count (including RC sub-questions)
   const calculateTotalQuestions = useCallback((quizData: QuizType): number => {
     let count = 0;
@@ -56,7 +74,7 @@ export const useQuizData = (): UseQuizDataReturn => {
           rightAnswer: q.rightAnswer,
           correctAnswer: q.correctAnswer,
           answer: q.answer,
-        })),
+        }))
       );
 
       setQuiz(data);
