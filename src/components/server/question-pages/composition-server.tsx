@@ -1,6 +1,6 @@
 import React from "react";
 import CompositionPageWrapper from "@/components/wrappers/question-pages/composition-page-wrapper";
-import CompositionWrapper from "@/components/wrappers/training-home/composition-wrapper";
+import CompositionWrapper from "@/components/wrappers/question-data/composition-wrapper";
 import { getQuestion } from "@/utils/question-fetcher";
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default async function CompositionServer() {
     <CompositionPageWrapper
       title="Composition Question"
       description="Practice writing with open-ended questions"
-answer={question.answer}
+      answer={question.answer}
     >
       <CompositionWrapper question={question} />
     </CompositionPageWrapper>

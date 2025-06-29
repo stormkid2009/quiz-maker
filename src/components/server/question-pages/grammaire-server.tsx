@@ -1,6 +1,6 @@
 import React from "react";
 import GrammairePageWrapper from "@/components/wrappers/question-pages/grammaire-page-wrapper";
-import GrammaireWrapper from "@/components/wrappers/training-home/grammaire-wrapper";
+import GrammaireWrapper from "@/components/wrappers/question-data/grammaire-wrapper";
 import { getQuestion } from "@/utils/question-fetcher";
 export const metadata = {
   title: "Grammar Question",

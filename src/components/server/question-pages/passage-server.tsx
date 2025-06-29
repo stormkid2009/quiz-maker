@@ -1,6 +1,6 @@
 import React from "react";
 import PassagePageWrapper from "@/components/wrappers/question-pages/passage-page-wrapper";
-import PassageWrapper from "@/components/wrappers/training-home/passage-wrapper";
+import PassageWrapper from "@/components/wrappers/question-data/passage-wrapper";
 import { getQuestion } from "@/utils/question-fetcher";
 
 export const metadata = {

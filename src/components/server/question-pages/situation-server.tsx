@@ -1,6 +1,6 @@
 import React from "react";
 import SituationPageWrapper from "@/components/wrappers/question-pages/situation-page-wrapper";
-import SituationWrapper from "@/components/wrappers/training-home/situation-wrapper";
+import SituationWrapper from "@/components/wrappers/question-data/situation-wrapper";
 
 export const metadata = {
   title: "Situation Question",
@@ -18,11 +18,11 @@ async function getSituationQuestion() {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch grammaire question: ${response.statusText}`,
+        `Failed to fetch grammaire question: ${response.statusText}`
       );
     }
     const data = await response.json();
@@ -47,8 +47,8 @@ export default async function SituationServer() {
     <SituationPageWrapper
       title="Situation Questions"
       description="These questions present real-world situations and require multiple selections. Select all that apply in each situation."
-      firstAnswer = {question.rightAnswer[0]}
-      secondAnswer = {question.rightAnswer[1]}
+      firstAnswer={question.rightAnswer[0]}
+      secondAnswer={question.rightAnswer[1]}
     >
       <SituationWrapper question={question} />
     </SituationPageWrapper>
