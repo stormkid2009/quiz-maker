@@ -63,19 +63,6 @@ export const useQuizData = (): UseQuizDataReturn => {
       }
 
       const data = await response.json();
-      console.log("Quiz data fetched:", data);
-
-      // Debug: Log the structure of questions to understand the data
-      console.log(
-        "Questions structure:",
-        data.questions.map((q: any) => ({
-          id: q.id,
-          type: q.type,
-          rightAnswer: q.rightAnswer,
-          correctAnswer: q.correctAnswer,
-          answer: q.answer,
-        }))
-      );
 
       setQuiz(data);
       setTotalQuestions(calculateTotalQuestions(data));
