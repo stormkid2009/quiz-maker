@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  BaseQuestionSchema,
-  QuestionTypes,
-} from "@/shared/schemas/base-question";
+import { BaseQuestionSchema, QuestionTypes } from "./base-question";
 
 /**
  * Zod schema and TypeScript type for multi-answer MCQ questions.
