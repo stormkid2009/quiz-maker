@@ -43,15 +43,9 @@ export const useQuizSubmission = ({
    * Handle quiz submission: calculate score and set submitted flag.
    */
   const handleSubmit = useCallback(() => {
-    console.log("=== SUBMIT DEBUG ===");
-    console.log("All answers before submit:", answers);
-    console.log("Quiz data:", quiz);
-
     const calculatedScore = calculateScore();
     setScore(calculatedScore);
     setSubmitted(true);
-    console.log("Quiz answers submitted:", answers);
-    console.log("Score:", calculatedScore);
   }, [answers, calculateScore, quiz]);
 
   return {
