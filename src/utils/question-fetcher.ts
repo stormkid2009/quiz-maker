@@ -166,7 +166,7 @@ export interface QuestionData {
  * @returns {data is QuestionData} True if data matches QuestionData.
  */
 export function isValidQuestionData(data: any): data is QuestionData {
-  return (
+  return !!(
     data &&
     typeof data.id === "string" &&
     typeof data.question === "string" &&
