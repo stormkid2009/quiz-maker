@@ -37,7 +37,7 @@ export const useQuizAnswers = ({
 }: UseQuizAnswersProps): UseQuizAnswersReturn => {
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [questionStatus, setQuestionStatus] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const [completedCount, setCompletedCount] = useState(0);
 
@@ -62,7 +62,6 @@ export const useQuizAnswers = ({
   // Update completed count when question status changes
   useEffect(() => {
     const completed = Object.values(questionStatus).filter(Boolean).length;
-    console.log(`completed count log`, completed);
     setCompletedCount(completed);
   }, [questionStatus]);
 
@@ -78,7 +77,7 @@ export const useQuizAnswers = ({
         [questionId]: selectedAnswers.length > 0,
       }));
     },
-    []
+    [],
   );
 
   return {
