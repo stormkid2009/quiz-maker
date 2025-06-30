@@ -68,8 +68,13 @@ const MAX_LOG_SIZE = Number(process.env.MAX_LOG_SIZE) || 10 * 1024 * 1024; // 10
 const ROTATION_CHECK_INTERVAL = 1000 * 60 * 5; // Check rotation every 5 minutes
 
 // Track last log rotation check and maintain a write queue for sequential file writes.
-let lastRotationCheck = Date.now();
-let writeQueue: Promise<void> = Promise.resolve();
+export let lastRotationCheck = Date.now();
+export let writeQueue: Promise<void> = Promise.resolve();
+
+// FOR TESTING PURPOSES
+export function _setLastRotationCheck(value: number) {
+  lastRotationCheck = value;
+}
 
 /**
  * Ensures that the log directory exists.
