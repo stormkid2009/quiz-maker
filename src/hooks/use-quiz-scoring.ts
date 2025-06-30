@@ -37,11 +37,6 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
     const sorted2 = [...arr2].map(String).sort();
 
     const result = sorted1.every((val, idx) => val === sorted2[idx]);
-    console.log(
-      `    Comparing arrays: ${JSON.stringify(sorted1)} vs ${JSON.stringify(
-        sorted2
-      )} = ${result}`
-    );
     return result;
   };
 
@@ -56,9 +51,6 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
     let totalQuestions = 0;
     let correctAnswers = 0;
 
-    console.log("=== SCORE CALCULATION DEBUG ===");
-    console.log("Current answers:", answers);
-
     quiz.questions.forEach((question) => {
       if (isMCQ(question) || isMultiMCQ(question)) {
         totalQuestions++;
@@ -70,13 +62,7 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
           return question.options[idx] || index;
         });
 
-        console.log(`Question ${question.id}:`);
-        console.log(`  User selected indices:`, userAnswerIndices);
-        console.log(`  User actual values:`, userAnswerValues);
-        console.log(`  Correct answer:`, rightAnswer);
-
         const isCorrect = compareArrays(userAnswerValues, rightAnswer);
-        console.log(`  Is correct:`, isCorrect);
 
         if (isCorrect) {
           correctAnswers++;
@@ -100,7 +86,6 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
           console.log(`  Correct answer:`, rightAnswer);
 
           const isCorrect = compareArrays(userAnswerValues, rightAnswer);
-          console.log(`  Is correct:`, isCorrect);
 
           if (isCorrect) {
             correctAnswers++;
@@ -109,14 +94,10 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
       }
     });
 
-    console.log(`Total questions processed: ${totalQuestions}`);
-    console.log(`Correct answers: ${correctAnswers}`);
-
     const calculatedScore =
       totalQuestions > 0
         ? Math.round((correctAnswers / totalQuestions) * 100)
         : 0;
-    console.log(`Final score: ${calculatedScore}%`);
 
     return calculatedScore;
   }, [quiz, answers]);
