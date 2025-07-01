@@ -23,10 +23,14 @@ const prisma = new PrismaClient();
 prisma.$use(async (params, next) => {
   if (params.action === "create" || params.action === "update") {
     const now = new Date();
-    if (params.action === "create") {
-      params.args.data.createdAt = now;
+    
+    // Ensure args.data exists
+    if (params.args && params.args.data) {
+      if (params.action === "create") {
+        params.args.data.createdAt = now;
+      }
+      params.args.data.updatedAt = now;
     }
-    params.args.data.updatedAt = now;
   }
   return next(params);
 });

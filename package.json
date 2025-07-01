@@ -9,7 +9,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test:frontend": "jest --config jest.config.js",
+    "test:backend": "jest --config jest.config.db.js",
+    "test:all": "jest --config jest.config.all.js",
+    "test:watch": "jest --config jest.config.all.js --watch",
+    "test:coverage": "jest --config jest.config.all.js --coverage"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
@@ -28,6 +33,7 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.2",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.0.1",
     "jest": "^30.0.3",
     "jest-environment-jsdom": "^30.0.2",
     "postcss": "^8.5.3",
