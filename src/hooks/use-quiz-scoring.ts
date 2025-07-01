@@ -80,10 +80,10 @@ export const useQuizScoring = ({ quiz, answers }: UseQuizScoringProps) => {
             return subQuestion.options[idx] || index;
           });
 
-          console.log(`RC Sub-question ${subQuestionId}:`);
-          console.log(`  User selected indices:`, userAnswerIndices);
-          console.log(`  User actual values:`, userAnswerValues);
-          console.log(`  Correct answer:`, rightAnswer);
+          // console.log(`RC Sub-question ${subQuestionId}:`);
+          // console.log(`  User selected indices:`, userAnswerIndices);
+          // console.log(`  User actual values:`, userAnswerValues);
+          // console.log(`  Correct answer:`, rightAnswer);
 
           const isCorrect = compareArrays(userAnswerValues, rightAnswer);
 

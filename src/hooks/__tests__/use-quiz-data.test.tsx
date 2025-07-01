@@ -32,6 +32,7 @@ describe("useQuizData", () => {
         json: () => Promise.resolve(mockQuiz),
       } as any)
     );
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {

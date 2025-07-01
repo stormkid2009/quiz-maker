@@ -165,7 +165,7 @@ export const useQuizContainer = (
       // Auto-save logic could be added here
       if (autoSave) {
         // Implementation would depend on your auto-save strategy
-        console.log("Auto-saving progress...", { questionId, answer });
+        // console.log("Auto-saving progress...", { questionId, answer });
       }
     },
     [baseHandleAnswerChange, autoSave]
