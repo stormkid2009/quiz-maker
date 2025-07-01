@@ -33,7 +33,7 @@ async function getSituationQuestion() {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching grammaire question:", error);
+    console.error("Error fetching situation question:", error);
     return null;
   }
 }
