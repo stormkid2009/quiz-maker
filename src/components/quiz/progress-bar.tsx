@@ -27,7 +27,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   total,
   percentage = true,
 }) => {
-  const progress = Math.min(Math.max(0, (current / total) * 100), 100);
+  const progress =
+    total > 0 ? Math.min(Math.max(0, (current / total) * 100), 100) : 0;
 
   return (
     <div className="w-full mb-4">
