@@ -17,7 +17,8 @@ module.exports = {
     "<rootDir>/src/components/**/__tests__/**/*.test.{ts,tsx}",
     "<rootDir>/src/hooks/**/__tests__/**/*.test.{ts,tsx}",
     "<rootDir>/src/shared/**/__tests__/**/*.test.{ts,tsx}",
-    "<rootDir>/src/utils/**/__tests__/**/*.test.{ts,tsx}"
+    "<rootDir>/src/utils/**/__tests__/**/*.test.{ts,tsx}",
+    "<rootDir>/src/app/**/__tests__/**/*.test.{ts,tsx}"
   ],
   testPathIgnorePatterns: [
     "<rootDir>/src/lib/__tests__/",
