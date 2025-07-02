@@ -14,7 +14,10 @@ if (!process.env.DATABASE_URL) {
 jest.mock('next/server', () => ({
   NextRequest: jest.fn(),
   NextResponse: {
-    json: jest.fn((data) => ({ json: () => data })),
+    json: jest.fn((data, options) => ({
+      json: () => data,
+      status: options && options.status ? options.status : 200,
+    })),
     redirect: jest.fn(),
   },
 }));
