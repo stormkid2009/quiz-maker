@@ -50,20 +50,6 @@ describe("SituationWrapper", () => {
     );
   });
 
-  it("handles answer changes correctly", () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    const { getByText } = render(<SituationWrapper question={mockQuestion} />);
-
-    fireEvent.click(getByText("Submit Answer"));
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Question situation1 answers changed to:",
-      ["situation-answer"]
-    );
-
-    consoleSpy.mockRestore();
-  });
-
   it("passes situation question with scenario to Question component", () => {
     const { getByTestId } = render(
       <SituationWrapper question={mockQuestion} />

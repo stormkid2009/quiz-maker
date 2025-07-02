@@ -40,7 +40,7 @@ export default function GrammairePageWrapper({
    * Reveal the correct answer by setting visibility flag.
    */
   const showTheAnswer = () => {
-    console.log("Setting answer to visible!");
+    //console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
@@ -48,7 +48,7 @@ export default function GrammairePageWrapper({
    * Load a new grammar question, resetting state or reloading.
    */
   const loadNewGrammarQuestion = () => {
-    console.log("Fetching a new grammar question...");
+    //console.log("Fetching a new grammar question...");
     // In a real app, you'd fetch data here and reset state
     window.location.reload(); // Or use the default behavior
   };

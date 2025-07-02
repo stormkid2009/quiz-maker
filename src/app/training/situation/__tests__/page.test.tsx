@@ -8,6 +8,16 @@ jest.mock("next/navigation", () => ({
 }));
 
 describe("SituationPage route", () => {
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeAll(() => {
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });

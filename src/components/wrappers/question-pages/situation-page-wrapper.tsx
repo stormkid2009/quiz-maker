@@ -43,7 +43,7 @@ export default function SituationPageWrapper({
    * Reveal the correct answer by setting visibility flag.
    */
   const showTheAnswer = () => {
-    console.log("Setting answer to visible!");
+    //console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
@@ -51,7 +51,7 @@ export default function SituationPageWrapper({
    * Load a new situation question, resetting state or reloading.
    */
   const loadNewSituationQuestion = () => {
-    console.log("Fetching a new situation question...");
+    //console.log("Fetching a new situation question...");
     // In a real app, you'd fetch data here and reset state
     window.location.reload(); // Or use the default behavior
   };

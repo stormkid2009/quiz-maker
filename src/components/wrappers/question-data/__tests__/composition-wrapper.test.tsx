@@ -33,20 +33,4 @@ describe("CompositionWrapper", () => {
       "Write about your favorite topic"
     );
   });
-
-  it("handles answer changes correctly", () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    const { getByText } = render(
-      <CompositionWrapper question={mockQuestion} />
-    );
-
-    fireEvent.click(getByText("Submit Answer"));
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Question comp1 answers changed to:",
-      ["test answer"]
-    );
-
-    consoleSpy.mockRestore();
-  });
 });

@@ -49,20 +49,6 @@ describe("PassageWrapper", () => {
     );
   });
 
-  it("handles answer changes correctly", () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    const { getByText } = render(<PassageWrapper question={mockQuestion} />);
-
-    fireEvent.click(getByText("Submit Answer"));
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Question passage1 answers changed to:",
-      ["answer1"]
-    );
-
-    consoleSpy.mockRestore();
-  });
-
   it("passes reading comprehension question with passage to Question component", () => {
     const { getByTestId } = render(<PassageWrapper question={mockQuestion} />);
 

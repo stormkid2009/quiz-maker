@@ -22,7 +22,7 @@ const GrammaireWrapper = ({ question }: { question: MCQQuestion }) => {
    */
   const handleAnswerChange = (questionId: string, answers: string[]) => {
     // Handle answer changes here
-    console.log(`Question ${questionId} answers changed to:`, answers);
+    //console.log(`Question ${questionId} answers changed to:`, answers);
     // You can add your logic here, such as:
     // - Storing answers in local state
     // - Sending to a parent component via context

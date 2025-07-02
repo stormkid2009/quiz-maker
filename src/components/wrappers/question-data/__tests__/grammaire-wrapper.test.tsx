@@ -39,20 +39,6 @@ describe("GrammaireWrapper", () => {
     expect(getByTestId("question-type")).toHaveTextContent("MCQ");
   });
 
-  it("handles answer changes correctly", () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-    const { getByText } = render(<GrammaireWrapper question={mockQuestion} />);
-
-    fireEvent.click(getByText("Submit Answer"));
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "Question gram1 answers changed to:",
-      ["option1"]
-    );
-
-    consoleSpy.mockRestore();
-  });
-
   it("passes MCQ question with options to Question component", () => {
     const { getByTestId } = render(
       <GrammaireWrapper question={mockQuestion} />

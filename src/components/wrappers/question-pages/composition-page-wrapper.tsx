@@ -40,7 +40,7 @@ export default function CompositionPageWrapper({
    * Reveal the correct answer by setting visibility flag.
    */
   const showTheAnswer = () => {
-    console.log("Setting answer to visible!");
+    //console.log("Setting answer to visible!");
     setIsAnswerVisible(true);
   };
 
@@ -48,7 +48,7 @@ export default function CompositionPageWrapper({
    * Load a new composition question, resetting state or reloading the page.
    */
   const loadNewCompositionQuestion = () => {
-    console.log("Fetching a new composition question...");
+    //console.log("Fetching a new composition question...");
     // In a real app, you'd fetch data here and reset state
     window.location.reload();
   };
